@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tulsi Events - Admin Control Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #800000;
+            --primary-dark: #4a0000;
+            --gold: #D4AF37;
+            --dark: #1A1A1A;
+            --bg: #F4F6F9;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: var(--dark); padding: 20px; }
+
+        .container { max-width: 900px; margin: auto; }
+
+        header { 
+            background: var(--primary); 
+            color: white; 
+            padding: 20px; 
+            border-radius: 12px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 25px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15); 
+            border-bottom: 4px solid var(--gold); 
+        }
+        header h1 { font-size: 1.35rem; color: var(--gold); }
+        .view-btn { 
+            background: var(--gold); 
+            color: var(--primary-dark); 
+            text-decoration: none; 
+            padding: 8px 16px; 
+            border-radius: 20px; 
+            font-weight: 600; 
+            font-size: 0.85rem; 
+        }
+
+        .card { 
+            background: #fff; 
+            padding: 25px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+            margin-bottom: 25px; 
+            border-left: 5px solid var(--primary); 
+        }
+        .card h2 { 
+            font-size: 1.25rem; 
+            color: var(--primary); 
+            margin-bottom: 18px; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+        }
+
+        .form-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 15px; 
+        }
+        @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+
+        .input-group { 
+            margin-bottom: 15px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 5px; 
+        }
+        .input-group label { font-size: 0.85rem; font-weight: 600; color: #555; }
+        .input-group input { 
+            padding: 10px 14px; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            outline: none; 
+            font-size: 0.9rem; 
+        }
+        .input-group input:focus { border-color: var(--primary); }
+
+        .btn-submit { 
+            background: var(--primary); 
+            color: white; 
+            border: none; 
+            padding: 12px 20px; 
+            border-radius: 8px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            width: 100%; 
+            font-size: 0.95rem; 
+        }
+        .btn-submit:hover { background: var(--primary-dark); }
+        .btn-submit:disabled { background: #aaa; cursor: not-allowed; }
+
+        .items-list { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
+            gap: 15px; 
+            margin-top: 20px; 
+        }
+        .item-card { 
+            border: 1px solid #eee; 
+            border-radius: 10px; 
+            overflow: hidden; 
+            background: #fafafa; 
+        }
+        .item-card img { width: 100%; height: 140px; object-fit: cover; }
+        .item-card-body { padding: 12px; }
+        .item-card-body h4 { font-size: 0.95rem; color: var(--dark); margin-bottom: 5px; }
+        .item-card-body p { font-size: 0.8rem; color: #666; margin-bottom: 10px; }
+        .btn-delete { 
+            background: #ff4d4d; 
+            color: white; 
+            border: none; 
+            padding: 6px 12px; 
+            border-radius: 6px; 
+            font-size: 0.8rem; 
+            cursor: pointer; 
+            width: 100%; 
+            font-weight: 500; 
+        }
+        .btn-delete:hover { background: #cc0000; }
+        .upload-status { font-size: 0.82rem; color: var(--gold); font-weight: 600; margin-top: 6px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Tulsi Events & Hotels - Admin Panel</h1>
+        <a href="index.html" target="_blank" class="view-btn">Live Website Dekhein ↗</a>
+    </header>
+
+    <!-- ADD VENUE / MARRIAGE HALL -->
+    <div class="card">
+        <h2>🏛️ Naya Marriage Hall / Hotel Room Add Karein</h2>
+        <div class="form-grid">
+            <div class="input-group">
+                <label>Venue Ka Naam (Title)</label>
+                <input type="text" id="venueName" placeholder="e.g. Tulsi Vatika Marriage Hall">
+            </div>
+            <div class="input-group">
+                <label>Location / Address</label>
+                <input type="text" id="venueLocation" placeholder="e.g. Babunia Road, Siwan">
+            </div>
+            <div class="input-group">
+                <label>Phone Number (Calling ke liye)</label>
+                <input type="text" id="venuePhone" value="8651222111">
+            </div>
+            <div class="input-group">
+                <label>Photo Chuniye (ImgBB Auto-Upload)</label>
+                <input type="file" id="venueFile" accept="image/*">
+                <div class="upload-status" id="venueStatus"></div>
+            </div>
+        </div>
+        <button class="btn-submit" id="venueBtn" onclick="addVenue()">Venue Add Karein</button>
+        
+        <h3 style="margin-top: 25px; font-size: 1rem; color: #555;">Live Venues (Database):</h3>
+        <div class="items-list" id="venuesList">Loading venues...</div>
+    </div>
+
+    <!-- ADD EVENT GALLERY PHOTO -->
+    <div class="card">
+        <h2>📸 Event Gallery Me Photo Add Karein</h2>
+        <div class="form-grid">
+            <div class="input-group">
+                <label>Event Title / Caption</label>
+                <input type="text" id="galleryTitle" placeholder="e.g. Grand Mandap Setup / Lawn Decor">
+            </div>
+            <div class="input-group">
+                <label>Photo Chuniye (ImgBB Auto-Upload)</label>
+                <input type="file" id="galleryFile" accept="image/*">
+                <div class="upload-status" id="galleryStatus"></div>
+            </div>
+        </div>
+        <button class="btn-submit" id="galleryBtn" onclick="addGallery()">Gallery Me Add Karein</button>
+        
+        <h3 style="margin-top: 25px; font-size: 1rem; color: #555;">Live Gallery Items:</h3>
+        <div class="items-list" id="galleryList">Loading gallery...</div>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script>
+    const IMGBB_API_KEY = "8104f8ac745d8dc4621b9d758844b418";
+
+    // Firebase Setup
+    const firebaseConfig = {
+        apiKey: "AIzaSyDySVpj8IkJsvw0Oy75N9FC918f7TDAo9g",
+        authDomain: "mozarc-72cbd.firebaseapp.com",
+        databaseURL: "https://mozarc-72cbd-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "mozarc-72cbd",
+        storageBucket: "mozarc-72cbd.firebasestorage.app",
+        messagingSenderId: "389907773893",
+        appId: "1:389907773893:web:faab0a2a6d24c12e5bb3ac"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // Helper: Upload file to ImgBB
+    async function uploadToImgBB(file) {
+        const formData = new FormData();
+        formData.append("image", file);
+        const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+            method: "POST",
+            body: formData
+        });
+        const data = await res.json();
+        if (data.success) {
+            return data.data.url;
+        } else {
+            throw new Error(data.error ? data.error.message : "Upload failed");
+        }
+    }
+
+    // 1. ADD VENUE
+    async function addVenue() {
+        const title = document.getElementById('venueName').value.trim();
+        const location = document.getElementById('venueLocation').value.trim();
+        const phone = document.getElementById('venuePhone').value.trim();
+        const fileInput = document.getElementById('venueFile');
+        const status = document.getElementById('venueStatus');
+        const btn = document.getElementById('venueBtn');
+
+        if (!title || !location || fileInput.files.length === 0) {
+            alert("Kripya title, location aur photo teeno select karein!");
+            return;
+        }
+
+        try {
+            btn.disabled = true;
+            status.innerText = "⏳ Photo ImgBB par upload ho rahi hai...";
+            const imageUrl = await uploadToImgBB(fileInput.files[0]);
+
+            status.innerText = "⏳ Database me save ho raha hai...";
+            await db.ref('tulsi_venues').push({ title, location, phone, imageUrl });
+
+            status.innerText = "";
+            document.getElementById('venueName').value = '';
+            document.getElementById('venueLocation').value = '';
+            fileInput.value = '';
+            alert("✅ Venue successfully add ho gaya!");
+        } catch (err) {
+            alert("Error: " + err.message);
+            status.innerText = "";
+        } finally {
+            btn.disabled = false;
+        }
+    }
+
+    // Listen to Venues
+    db.ref('tulsi_venues').on('value', (snapshot) => {
+        const list = document.getElementById('venuesList');
+        list.innerHTML = '';
+        if (snapshot.exists()) {
+            snapshot.forEach((child) => {
+                const item = child.val();
+                const key = child.key;
+                list.innerHTML += `
+                    <div class="item-card">
+                        <img src="${item.imageUrl}" alt="${item.title}">
+                        <div class="item-card-body">
+                            <h4>${item.title}</h4>
+                            <p>📍 ${item.location}<br>📞 ${item.phone}</p>
+                            <button class="btn-delete" onclick="deleteItem('tulsi_venues', '${key}')">Delete</button>
+                        </div>
+                    </div>
+                `;
+            });
+        } else {
+            list.innerHTML = '<p style="color:#888;">Koi venue added nahi hai.</p>';
+        }
+    });
+
+    // 2. ADD GALLERY
+    async function addGallery() {
+        const title = document.getElementById('galleryTitle').value.trim();
+        const fileInput = document.getElementById('galleryFile');
+        const status = document.getElementById('galleryStatus');
+        const btn = document.getElementById('galleryBtn');
+
+        if (!title || fileInput.files.length === 0) {
+            alert("Kripya caption aur photo dono select karein!");
+            return;
+        }
+
+        try {
+            btn.disabled = true;
+            status.innerText = "⏳ Photo ImgBB par upload ho rahi hai...";
+            const imageUrl = await uploadToImgBB(fileInput.files[0]);
+
+            status.innerText = "⏳ Database me save ho raha hai...";
+            await db.ref('tulsi_gallery').push({ title, imageUrl });
+
+            status.innerText = "";
+            document.getElementById('galleryTitle').value = '';
+            fileInput.value = '';
+            alert("✅ Gallery photo successfully add ho gayi!");
+        } catch (err) {
+            alert("Error: " + err.message);
+            status.innerText = "";
+        } finally {
+            btn.disabled = false;
+        }
+    }
+
+    // Listen to Gallery
+    db.ref('tulsi_gallery').on('value', (snapshot) => {
+        const list = document.getElementById('galleryList');
+        list.innerHTML = '';
+        if (snapshot.exists()) {
+            snapshot.forEach((child) => {
+                const item = child.val();
+                const key = child.key;
+                list.innerHTML += `
+                    <div class="item-card">
+                        <img src="${item.imageUrl}" alt="${item.title}">
+                        <div class="item-card-body">
+                            <h4>${item.title}</h4>
+                            <button class="btn-delete" onclick="deleteItem('tulsi_gallery', '${key}')">Delete</button>
+                        </div>
+                    </div>
+                `;
+            });
+        } else {
+            list.innerHTML = '<p style="color:#888;">Koi gallery photo added nahi hai.</p>';
+        }
+    });
+
+    // Generic Delete
+    function deleteItem(node, key) {
+        if (confirm("Kya aap ise sach me delete karna chahte hain?")) {
+            db.ref(node).child(key).remove()
+                .then(() => alert("Deleted successfully!"))
+                .catch(err => alert("Error: " + err.message));
+        }
+    }
+</script>
+</body>
+</html>   btn.disabled = true;
+            spinner.style.display = "inline-block";
+            btnText.innerText = "Uploading to Server...";
+
+            try {
+                const imageUrl = await uploadImageToImgBB(fileInput.files[0]);
+                btnText.innerText = "Saving to Database...";
+                
+                await db.ref('sm_events_gallery').push({
+                    title: titleInput,
+                    imageUrl: imageUrl,
+                    timestamp: Date.now()
+                });
+
+                soundSuccess.play();
+                showToast("✅ Photo added to Gallery!");
+                fileInput.value = ""; document.getElementById('gal-title').value = "";
+            } catch (error) {
+                showToast(error.message, true);
+            } finally {
+                btn.disabled = false;
+                spinner.style.display = "none";
+                btnText.innerText = "Upload to Gallery";
+            }
+        }
+
+        function deleteItem(node, key) {
+            if(confirm("Are you sure you want to delete this?")) {
+                db.ref(node).child(key).remove()
+                .then(() => {
+                    soundDelete.play();
+                    showToast("Deleted successfully!");
+                })
+                .catch(err => showToast("Error deleting item", true));
+            }
+        }
+
+        // REALTIME DATABASE FETCH (Updates Live on Screen)
+        db.ref('sm_events_services').on('value', (snapshot) => {
+            const container = document.getElementById('live-services');
+            container.innerHTML = '';
+            if(snapshot.exists()) {
+                snapshot.forEach((child) => {
+                    const data = child.val();
+                    const key = child.key;
+                    container.innerHTML += `
+                        <div class="data-card">
+                            <img src="${data.imageUrl}" alt="${data.title}">
+                            <div class="data-card-info">
+                                <h4>${data.title}</h4>
+                                <p>${data.price}</p>
+                                <button class="delete-btn" onclick="deleteItem('sm_events_services', '${key}')">🗑️ Delete</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                container.innerHTML = '<p style="color:#888;">No services uploaded yet.</p>';
+            }
+        });
+
+        db.ref('sm_events_gallery').on('value', (snapshot) => {
+            const container = document.getElementById('live-gallery');
+            container.innerHTML = '';
+            if(snapshot.exists()) {
+                snapshot.forEach((child) => {
+                    const data = child.val();
+                    const key = child.key;
+                    container.innerHTML += `
+                        <div class="data-card">
+                            <img src="${data.imageUrl}" alt="${data.title}">
+                            <div class="data-card-info">
+                                <h4>${data.title}</h4>
+                                <button class="delete-btn" style="margin-top:10px;" onclick="deleteItem('sm_events_gallery', '${key}')">🗑️ Delete</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                container.innerHTML = '<p style="color:#888;">No photos uploaded yet.</p>';
+            }
+        });
+    </script>
+</body>
+</html>
