@@ -3,191 +3,415 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tulsi Events - Admin Control Panel</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Tulsi Events | Admin Control Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --primary: #800000;
-            --primary-dark: #4a0000;
-            --gold: #D4AF37;
-            --dark: #1A1A1A;
-            --bg: #F4F6F9;
+            --bg-deep: #0b0709;
+            --gold-bright: #f5d381;
+            --gold-base: #d4af37;
+            --gold-gradient: linear-gradient(135deg, #f5d381 0%, #d4af37 50%, #9b7817 100%);
+            --border-glow: rgba(212, 175, 55, 0.28);
+            --border-glow-hover: rgba(245, 211, 129, 0.6);
+            --text-white: #fcfbfa;
+            --text-muted: #bfa8ad;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: var(--dark); padding: 15px; }
-
-        .container { max-width: 900px; margin: auto; padding-bottom: 50px; }
-
-        header { 
-            background: var(--primary); 
-            color: white; 
-            padding: 18px 20px; 
-            border-radius: 12px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            margin-bottom: 25px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15); 
-            border-bottom: 4px solid var(--gold); 
-        }
-        header h1 { font-size: 1.25rem; color: var(--gold); }
-        .view-btn { 
-            background: var(--gold); 
-            color: var(--primary-dark); 
-            text-decoration: none; 
-            padding: 7px 14px; 
-            border-radius: 20px; 
-            font-weight: 600; 
-            font-size: 0.8rem; 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
-        .card { 
-            background: #fff; 
-            padding: 22px; 
-            border-radius: 12px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
-            margin-bottom: 25px; 
-            border-left: 5px solid var(--primary); 
-        }
-        .card h2 { 
-            font-size: 1.15rem; 
-            color: var(--primary); 
-            margin-bottom: 18px; 
-            display: flex; 
-            align-items: center; 
-            gap: 8px; 
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-white);
+            background-image: 
+                radial-gradient(circle at 10% 10%, rgba(94, 8, 20, 0.45) 0%, transparent 45%),
+                radial-gradient(circle at 90% 90%, rgba(212, 175, 55, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(11, 7, 9, 0.95) 0%, #050304 100%);
+            min-height: 100vh;
+            padding: 20px 16px 80px;
         }
 
-        .form-grid { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 15px; 
+        .cinzel {
+            font-family: 'Cinzel', serif;
+            letter-spacing: 0.04em;
         }
-        @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
 
-        .input-group { 
-            margin-bottom: 15px; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 5px; 
+        .container {
+            max-width: 1000px;
+            margin: auto;
         }
-        .input-group label { font-size: 0.82rem; font-weight: 600; color: #555; }
-        .input-group input { 
-            padding: 10px 14px; 
-            border: 1px solid #ddd; 
-            border-radius: 8px; 
-            outline: none; 
-            font-size: 0.88rem; 
-        }
-        .input-group input:focus { border-color: var(--primary); }
 
-        .btn-submit { 
-            background: var(--primary); 
-            color: white; 
-            border: none; 
-            padding: 12px 20px; 
-            border-radius: 8px; 
-            font-weight: 600; 
-            cursor: pointer; 
-            transition: 0.3s; 
-            width: 100%; 
-            font-size: 0.92rem; 
+        header {
+            background: linear-gradient(145deg, rgba(40, 14, 21, 0.85), rgba(15, 6, 9, 0.95));
+            border: 1px solid var(--border-glow);
+            border-radius: 20px;
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            margin-bottom: 25px;
         }
-        .btn-submit:hover { background: var(--primary-dark); }
-        .btn-submit:disabled { background: #aaa; cursor: not-allowed; }
 
-        .items-list { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
-            gap: 15px; 
-            margin-top: 20px; 
+        .brand-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
         }
-        .item-card { 
-            border: 1px solid #eee; 
-            border-radius: 10px; 
-            overflow: hidden; 
-            background: #fafafa; 
+
+        .brand-sub {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .view-site-btn {
+            background: var(--gold-gradient);
+            color: #1a0307;
+            text-decoration: none;
+            padding: 9px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.82rem;
+            transition: all 0.3s ease;
+        }
+
+        .view-site-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.5);
+        }
+
+        .glass-panel {
+            background: linear-gradient(135deg, rgba(32, 12, 18, 0.65), rgba(16, 6, 9, 0.75));
+            border: 1px solid var(--border-glow);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.55);
+        }
+
+        .panel-heading {
+            margin-bottom: 18px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+            padding-bottom: 12px;
+        }
+
+        .panel-heading h2 {
+            font-size: 1.2rem;
+            color: var(--gold-bright);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .field-group {
             display: flex;
             flex-direction: column;
+            gap: 6px;
         }
-        .item-card img { width: 100%; height: 140px; object-fit: cover; }
-        .item-card-body { padding: 12px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .item-card-body h4 { font-size: 0.95rem; color: var(--dark); margin-bottom: 5px; }
-        .item-card-body p { font-size: 0.8rem; color: #666; margin-bottom: 10px; }
-        .btn-delete { 
-            background: #ff4d4d; 
-            color: white; 
-            border: none; 
-            padding: 7px 12px; 
-            border-radius: 6px; 
-            font-size: 0.8rem; 
-            cursor: pointer; 
-            width: 100%; 
-            font-weight: 500; 
+
+        .field-group label {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-muted);
         }
-        .btn-delete:hover { background: #cc0000; }
-        .upload-status { font-size: 0.82rem; color: var(--gold); font-weight: 600; margin-top: 6px; }
+
+        .glass-input {
+            background: rgba(10, 4, 7, 0.8);
+            border: 1px solid rgba(212, 175, 55, 0.22);
+            color: #fff;
+            padding: 12px 14px;
+            border-radius: 12px;
+            font-size: 0.88rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .glass-input:focus {
+            border-color: var(--gold-base);
+            box-shadow: 0 0 12px rgba(212, 175, 55, 0.25);
+        }
+
+        .upload-dropzone {
+            border: 2px dashed rgba(212, 175, 55, 0.35);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            background: rgba(15, 6, 10, 0.4);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .upload-dropzone input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .upload-hint {
+            font-size: 0.82rem;
+            color: var(--gold-bright);
+            font-weight: 500;
+        }
+
+        .btn-gold-3d {
+            background: var(--gold-gradient);
+            color: #150205;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 16px;
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+            transition: all 0.25s ease;
+        }
+
+        .btn-gold-3d:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(212, 175, 55, 0.45);
+        }
+
+        .btn-gold-3d:disabled {
+            background: #443236;
+            color: #887276;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .cards-shelf {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 18px;
+            margin-top: 20px;
+        }
+
+        .item-3d-card {
+            background: rgba(18, 7, 11, 0.9);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 14px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+
+        .item-3d-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .item-content {
+            padding: 14px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .item-content h4 {
+            font-size: 0.95rem;
+            color: var(--text-white);
+            margin-bottom: 5px;
+        }
+
+        .item-content p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .btn-del-3d {
+            background: rgba(255, 71, 87, 0.15);
+            color: #ff6b81;
+            border: 1px solid rgba(255, 71, 87, 0.35);
+            padding: 7px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.8rem;
+            width: 100%;
+            transition: 0.2s;
+        }
+
+        .btn-del-3d:hover {
+            background: #ff4757;
+            color: #fff;
+        }
+
+        .status-badge {
+            font-size: 0.82rem;
+            color: var(--gold-bright);
+            font-weight: 600;
+            margin-top: 6px;
+        }
+
+        .empty-shelf {
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 24px;
+            border: 1px dashed rgba(212, 175, 55, 0.2);
+            border-radius: 12px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        #toast {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: #1f080c;
+            color: var(--gold-bright);
+            border: 1px solid var(--gold-base);
+            padding: 12px 22px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            z-index: 9999;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        #toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h1>Tulsi Events - Admin Panel</h1>
-        <a href="index.html" target="_blank" class="view-btn">Live Site ↗</a>
+        <div>
+            <h1 class="brand-title cinzel">Tulsi Events & Hotels</h1>
+            <p class="brand-sub">Master Admin Studio</p>
+        </div>
+        <a href="index.html" target="_blank" class="view-site-btn">Live Website ↗</a>
     </header>
 
-    <!-- SECTION 1: ADD VENUE -->
-    <div class="card">
-        <h2>🏛️ Naya Marriage Hall / Venue Add Karein</h2>
-        <div class="form-grid">
-            <div class="input-group">
-                <label>Venue Ka Naam (Title)</label>
-                <input type="text" id="venueName" placeholder="e.g. Tulsi Vatika Marriage Hall">
+    <!-- SECTION 1: SOCIAL MEDIA, EMAIL & CONTACTS -->
+    <div class="glass-panel">
+        <div class="panel-heading">
+            <h2 class="cinzel">🌐 User Panel Social Media & Contacts</h2>
+        </div>
+        <div class="grid-2">
+            <div class="field-group">
+                <label>Official Email ID</label>
+                <input type="email" id="siteEmail" class="glass-input" placeholder="e.g. contact@tulsievents.com">
             </div>
-            <div class="input-group">
-                <label>Location / Address</label>
-                <input type="text" id="venueLocation" placeholder="e.g. Babunia Road, Siwan">
+            <div class="field-group">
+                <label>Instagram Profile Link</label>
+                <input type="url" id="siteInstagram" class="glass-input" placeholder="https://instagram.com/yourprofile">
             </div>
-            <div class="input-group">
-                <label>Phone Number (Call Booking)</label>
-                <input type="text" id="venuePhone" value="8651222111">
+            <div class="field-group">
+                <label>Facebook Page Link</label>
+                <input type="url" id="siteFacebook" class="glass-input" placeholder="https://facebook.com/yourpage">
             </div>
-            <div class="input-group">
-                <label>Photo Chuniye (Auto ImgBB Upload)</label>
-                <input type="file" id="venueFile" accept="image/*">
-                <div class="upload-status" id="venueStatus"></div>
+            <div class="field-group">
+                <label>Main Booking Phone Number</label>
+                <input type="text" id="sitePhone" class="glass-input" placeholder="e.g. 8651222111">
+            </div>
+            <div class="field-group" style="grid-column: 1 / -1;">
+                <label>Website Top Notice (Khali chhodne par hide rahega)</label>
+                <input type="text" id="siteNotice" class="glass-input" placeholder="e.g. Wedding Season Booking 2026 Shuru Hai! Call Now">
             </div>
         </div>
-        <button class="btn-submit" id="venueBtn" onclick="addVenue()">Venue Add Karein</button>
-        
-        <h3 style="margin-top: 25px; font-size: 0.95rem; color: #555;">Live Venues (Database):</h3>
-        <div class="items-list" id="venuesList">Loading venues...</div>
+        <button class="btn-gold-3d" id="btnSaveConfig" onclick="saveGlobalConfig()">Save All Social Links & Contacts</button>
     </div>
 
-    <!-- SECTION 2: ADD GALLERY -->
-    <div class="card">
-        <h2>📸 Event Gallery Me Photo Add Karein</h2>
-        <div class="form-grid">
-            <div class="input-group" style="grid-column: 1 / -1;">
-                <label>Photo Caption / Title</label>
-                <input type="text" id="galleryTitle" placeholder="e.g. Grand Mandap Setup / Lawn Decor">
+    <!-- SECTION 2: VENUES MANAGER -->
+    <div class="glass-panel">
+        <div class="panel-heading">
+            <h2 class="cinzel">🏛️ Marriage Halls & Venues</h2>
+        </div>
+        <div class="grid-2">
+            <div class="field-group">
+                <label>Venue Title</label>
+                <input type="text" id="vName" class="glass-input" placeholder="e.g. Tulsi Vatika Marriage Hall">
             </div>
-            <div class="input-group" style="grid-column: 1 / -1;">
-                <label>Photo Chuniye (Auto ImgBB Upload)</label>
-                <input type="file" id="galleryFile" accept="image/*">
-                <div class="upload-status" id="galleryStatus"></div>
+            <div class="field-group">
+                <label>Location / Address</label>
+                <input type="text" id="vLoc" class="glass-input" placeholder="e.g. Babunia Road, Siwan">
+            </div>
+            <div class="field-group">
+                <label>Venue Phone Number</label>
+                <input type="text" id="vPhone" class="glass-input" value="8651222111">
+            </div>
+            <div class="field-group">
+                <label>Venue Photo (Auto Upload)</label>
+                <div class="upload-dropzone">
+                    <span class="upload-hint" id="vFileText">📁 Select Venue Photo</span>
+                    <input type="file" id="vFile" accept="image/*" onchange="previewFileName('vFile', 'vFileText')">
+                </div>
             </div>
         </div>
-        <button class="btn-submit" id="galleryBtn" onclick="addGallery()">Gallery Me Photo Add Karein</button>
-        
-        <h3 style="margin-top: 25px; font-size: 0.95rem; color: #555;">Live Gallery Items:</h3>
-        <div class="items-list" id="galleryList">Loading gallery...</div>
+        <div class="status-badge" id="vStatus"></div>
+        <button class="btn-gold-3d" id="btnAddVenue" onclick="addVenue()">Add Venue</button>
+
+        <h3 class="cinzel" style="margin-top: 25px; font-size: 0.95rem; color: var(--gold-bright);">Active Venues:</h3>
+        <div class="cards-shelf" id="venuesShelf">
+            <div class="empty-shelf">Loading venues...</div>
+        </div>
+    </div>
+
+    <!-- SECTION 3: GALLERY MANAGER -->
+    <div class="glass-panel">
+        <div class="panel-heading">
+            <h2 class="cinzel">📸 Event Gallery</h2>
+        </div>
+        <div class="grid-2">
+            <div class="field-group">
+                <label>Photo Caption / Title</label>
+                <input type="text" id="gTitle" class="glass-input" placeholder="e.g. Grand Mandap Stage Setup">
+            </div>
+            <div class="field-group">
+                <label>Gallery Photo (Auto Upload)</label>
+                <div class="upload-dropzone">
+                    <span class="upload-hint" id="gFileText">📁 Select Gallery Photo</span>
+                    <input type="file" id="gFile" accept="image/*" onchange="previewFileName('gFile', 'gFileText')">
+                </div>
+            </div>
+        </div>
+        <div class="status-badge" id="gStatus"></div>
+        <button class="btn-gold-3d" id="btnAddGallery" onclick="addGallery()">Add to Gallery</button>
+
+        <h3 class="cinzel" style="margin-top: 25px; font-size: 0.95rem; color: var(--gold-bright);">Active Gallery Photos:</h3>
+        <div class="cards-shelf" id="galleryShelf">
+            <div class="empty-shelf">Loading gallery...</div>
+        </div>
     </div>
 </div>
 
-<!-- Firebase SDK -->
+<div id="toast">✅ Updated!</div>
+
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
@@ -207,52 +431,114 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    async function uploadToImgBB(file) {
-        const formData = new FormData();
-        formData.append("image", file);
-        const res = await fetch("https://api.imgbb.com/1/upload?key=" + IMGBB_API_KEY, {
-            method: "POST",
-            body: formData
-        });
-        const data = await res.json();
-        if (data && data.success && data.data && data.data.url) {
-            return data.data.url;
-        } else {
-            throw new Error((data && data.error) ? data.error.message : "ImgBB Upload Failed");
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        toast.innerText = msg;
+        toast.classList.add('show');
+        setTimeout(function() { toast.classList.remove('show'); }, 3000);
+    }
+
+    function previewFileName(inputId, textId) {
+        const fileInput = document.getElementById(inputId);
+        const textElem = document.getElementById(textId);
+        if (fileInput.files.length > 0) {
+            textElem.innerText = "Selected: " + fileInput.files[0].name;
+            textElem.style.color = "#2ed573";
         }
     }
 
+    async function uploadToImgBB(file) {
+        const formData = new FormData();
+        formData.append("image", file);
+        const response = await fetch("https://api.imgbb.com/1/upload?key=" + IMGBB_API_KEY, {
+            method: "POST",
+            body: formData
+        });
+        const result = await response.json();
+        if (result && result.success && result.data && result.data.url) {
+            return result.data.url;
+        } else {
+            throw new Error((result && result.error) ? result.error.message : "Upload failed");
+        }
+    }
+
+    // 1. LOAD & SAVE SOCIAL CONFIG
+    const configRef = db.ref('tulsi_config');
+
+    configRef.on('value', function(snapshot) {
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            if (data.email) document.getElementById('siteEmail').value = data.email;
+            if (data.instagram) document.getElementById('siteInstagram').value = data.instagram;
+            if (data.facebook) document.getElementById('siteFacebook').value = data.facebook;
+            if (data.phone) document.getElementById('sitePhone').value = data.phone;
+            if (data.notice) document.getElementById('siteNotice').value = data.notice;
+        }
+    });
+
+    async function saveGlobalConfig() {
+        const email = document.getElementById('siteEmail').value.trim();
+        const instagram = document.getElementById('siteInstagram').value.trim();
+        const facebook = document.getElementById('siteFacebook').value.trim();
+        const phone = document.getElementById('sitePhone').value.trim();
+        const notice = document.getElementById('siteNotice').value.trim();
+        const btn = document.getElementById('btnSaveConfig');
+
+        try {
+            btn.disabled = true;
+            btn.innerText = "Saving...";
+            await configRef.update({
+                email: email,
+                instagram: instagram,
+                facebook: facebook,
+                phone: phone,
+                notice: notice,
+                updatedAt: Date.now()
+            });
+            showToast("✨ Social IDs & Contacts Updated!");
+        } catch (err) {
+            alert("Error: " + err.message);
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "Save All Social Links & Contacts";
+        }
+    }
+
+    // 2. VENUES
     async function addVenue() {
-        const title = document.getElementById('venueName').value.trim();
-        const location = document.getElementById('venueLocation').value.trim();
-        const phone = document.getElementById('venuePhone').value.trim();
-        const fileInput = document.getElementById('venueFile');
-        const status = document.getElementById('venueStatus');
-        const btn = document.getElementById('venueBtn');
+        const title = document.getElementById('vName').value.trim();
+        const location = document.getElementById('vLoc').value.trim();
+        const phone = document.getElementById('vPhone').value.trim();
+        const fileInput = document.getElementById('vFile');
+        const status = document.getElementById('vStatus');
+        const btn = document.getElementById('btnAddVenue');
 
         if (!title || !location || fileInput.files.length === 0) {
-            alert("Kripya title, location aur photo teeno select karein!");
+            alert("Kripya Title, Address aur Photo select karein!");
             return;
         }
 
         try {
             btn.disabled = true;
-            status.innerText = "⏳ Photo upload ho rahi hai...";
+            status.innerText = "⏳ Uploading photo...";
             const imageUrl = await uploadToImgBB(fileInput.files[0]);
 
-            status.innerText = "⏳ Database me save ho raha hai...";
+            status.innerText = "⏳ Saving...";
             await db.ref('tulsi_venues').push({
                 title: title,
                 location: location,
                 phone: phone,
-                imageUrl: imageUrl
+                imageUrl: imageUrl,
+                timestamp: Date.now()
             });
 
-            status.innerText = "";
-            document.getElementById('venueName').value = '';
-            document.getElementById('venueLocation').value = '';
+            document.getElementById('vName').value = '';
+            document.getElementById('vLoc').value = '';
             fileInput.value = '';
-            alert("✅ Venue successfully add ho gaya!");
+            document.getElementById('vFileText').innerText = "📁 Select Venue Photo";
+            document.getElementById('vFileText').style.color = "var(--gold-bright)";
+            status.innerText = "";
+            showToast("🏛️ Venue Added!");
         } catch (err) {
             alert("Error: " + err.message);
             status.innerText = "";
@@ -262,56 +548,60 @@
     }
 
     db.ref('tulsi_venues').on('value', function(snapshot) {
-        const list = document.getElementById('venuesList');
-        list.innerHTML = '';
+        const shelf = document.getElementById('venuesShelf');
+        shelf.innerHTML = '';
         if (snapshot.exists()) {
             snapshot.forEach(function(child) {
                 const item = child.val();
                 const key = child.key;
                 const card = document.createElement('div');
-                card.className = 'item-card';
+                card.className = 'item-3d-card';
                 card.innerHTML = 
                     '<img src="' + item.imageUrl + '" alt="' + item.title + '">' +
-                    '<div class="item-card-body">' +
+                    '<div class="item-content">' +
                         '<div>' +
                             '<h4>' + item.title + '</h4>' +
                             '<p>📍 ' + item.location + '<br>📞 ' + item.phone + '</p>' +
                         '</div>' +
-                        '<button class="btn-delete" onclick="deleteItem(\'tulsi_venues\', \'' + key + '\')">Delete</button>' +
+                        '<button class="btn-del-3d" onclick="deleteNode(\'tulsi_venues\', \'' + key + '\')">🗑️ Remove Venue</button>' +
                     '</div>';
-                list.appendChild(card);
+                shelf.appendChild(card);
             });
         } else {
-            list.innerHTML = '<p style="color:#888;">Koi venue added nahi hai.</p>';
+            shelf.innerHTML = '<div class="empty-shelf">No venues added yet.</div>';
         }
     });
 
+    // 3. GALLERY
     async function addGallery() {
-        const title = document.getElementById('galleryTitle').value.trim();
-        const fileInput = document.getElementById('galleryFile');
-        const status = document.getElementById('galleryStatus');
-        const btn = document.getElementById('galleryBtn');
+        const title = document.getElementById('gTitle').value.trim();
+        const fileInput = document.getElementById('gFile');
+        const status = document.getElementById('gStatus');
+        const btn = document.getElementById('btnAddGallery');
 
         if (!title || fileInput.files.length === 0) {
-            alert("Kripya title aur photo dono select karein!");
+            alert("Kripya Caption aur Photo select karein!");
             return;
         }
 
         try {
             btn.disabled = true;
-            status.innerText = "⏳ Photo upload ho rahi hai...";
+            status.innerText = "⏳ Uploading photo...";
             const imageUrl = await uploadToImgBB(fileInput.files[0]);
 
-            status.innerText = "⏳ Database me save ho raha hai...";
+            status.innerText = "⏳ Saving...";
             await db.ref('tulsi_gallery').push({
                 title: title,
-                imageUrl: imageUrl
+                imageUrl: imageUrl,
+                timestamp: Date.now()
             });
 
-            status.innerText = "";
-            document.getElementById('galleryTitle').value = '';
+            document.getElementById('gTitle').value = '';
             fileInput.value = '';
-            alert("✅ Gallery photo successfully add ho gayi!");
+            document.getElementById('gFileText').innerText = "📁 Select Gallery Photo";
+            document.getElementById('gFileText').style.color = "var(--gold-bright)";
+            status.innerText = "";
+            showToast("📸 Photo Added!");
         } catch (err) {
             alert("Error: " + err.message);
             status.innerText = "";
@@ -321,401 +611,34 @@
     }
 
     db.ref('tulsi_gallery').on('value', function(snapshot) {
-        const list = document.getElementById('galleryList');
-        list.innerHTML = '';
+        const shelf = document.getElementById('galleryShelf');
+        shelf.innerHTML = '';
         if (snapshot.exists()) {
             snapshot.forEach(function(child) {
                 const item = child.val();
                 const key = child.key;
                 const card = document.createElement('div');
-                card.className = 'item-card';
+                card.className = 'item-3d-card';
                 card.innerHTML = 
                     '<img src="' + item.imageUrl + '" alt="' + item.title + '">' +
-                    '<div class="item-card-body">' +
-                        '<div>' +
-                            '<h4>' + item.title + '</h4>' +
-                        '</div>' +
-                        '<button class="btn-delete" onclick="deleteItem(\'tulsi_gallery\', \'' + key + '\')">Delete</button>' +
+                    '<div class="item-content">' +
+                        '<h4>' + item.title + '</h4>' +
+                        '<button class="btn-del-3d" onclick="deleteNode(\'tulsi_gallery\', \'' + key + '\')">🗑️ Delete</button>' +
                     '</div>';
-                list.appendChild(card);
+                shelf.appendChild(card);
             });
         } else {
-            list.innerHTML = '<p style="color:#888;">Koi gallery photo added nahi hai.</p>';
+            shelf.innerHTML = '<div class="empty-shelf">No gallery photos added yet.</div>';
         }
     });
 
-    function deleteItem(node, key) {
+    function deleteNode(node, key) {
         if (confirm("Kya aap ise sach me delete karna chahte hain?")) {
             db.ref(node).child(key).remove()
-                .then(function() {
-                    alert("Deleted successfully!");
-                })
-                .catch(function(err) {
-                    alert("Error: " + err.message);
-                });
+                .then(function() { showToast("🗑️ Deleted successfully!"); })
+                .catch(function(err) { alert("Error: " + err.message); });
         }
     }
 </script>
 </body>
 </html>
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tulsi Events - Admin Control Panel</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #800000;
-            --primary-dark: #4a0000;
-            --gold: #D4AF37;
-            --dark: #1A1A1A;
-            --bg: #F4F6F9;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: var(--dark); padding: 15px; }
-
-        .container { max-width: 900px; margin: auto; padding-bottom: 50px; }
-
-        header { 
-            background: var(--primary); 
-            color: white; 
-            padding: 18px 20px; 
-            border-radius: 12px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            margin-bottom: 25px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15); 
-            border-bottom: 4px solid var(--gold); 
-        }
-        header h1 { font-size: 1.25rem; color: var(--gold); }
-        .view-btn { 
-            background: var(--gold); 
-            color: var(--primary-dark); 
-            text-decoration: none; 
-            padding: 7px 14px; 
-            border-radius: 20px; 
-            font-weight: 600; 
-            font-size: 0.8rem; 
-        }
-
-        .card { 
-            background: #fff; 
-            padding: 22px; 
-            border-radius: 12px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
-            margin-bottom: 25px; 
-            border-left: 5px solid var(--primary); 
-        }
-        .card h2 { 
-            font-size: 1.15rem; 
-            color: var(--primary); 
-            margin-bottom: 18px; 
-            display: flex; 
-            align-items: center; 
-            gap: 8px; 
-        }
-
-        .form-grid { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 15px; 
-        }
-        @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
-
-        .input-group { 
-            margin-bottom: 15px; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 5px; 
-        }
-        .input-group label { font-size: 0.82rem; font-weight: 600; color: #555; }
-        .input-group input { 
-            padding: 10px 14px; 
-            border: 1px solid #ddd; 
-            border-radius: 8px; 
-            outline: none; 
-            font-size: 0.88rem; 
-        }
-        .input-group input:focus { border-color: var(--primary); }
-
-        .btn-submit { 
-            background: var(--primary); 
-            color: white; 
-            border: none; 
-            padding: 12px 20px; 
-            border-radius: 8px; 
-            font-weight: 600; 
-            cursor: pointer; 
-            transition: 0.3s; 
-            width: 100%; 
-            font-size: 0.92rem; 
-        }
-        .btn-submit:hover { background: var(--primary-dark); }
-        .btn-submit:disabled { background: #aaa; cursor: not-allowed; }
-
-        .items-list { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
-            gap: 15px; 
-            margin-top: 20px; 
-        }
-        .item-card { 
-            border: 1px solid #eee; 
-            border-radius: 10px; 
-            overflow: hidden; 
-            background: #fafafa; 
-            display: flex;
-            flex-direction: column;
-        }
-        .item-card img { width: 100%; height: 140px; object-fit: cover; }
-        .item-card-body { padding: 12px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .item-card-body h4 { font-size: 0.95rem; color: var(--dark); margin-bottom: 5px; }
-        .item-card-body p { font-size: 0.8rem; color: #666; margin-bottom: 10px; }
-        .btn-delete { 
-            background: #ff4d4d; 
-            color: white; 
-            border: none; 
-            padding: 7px 12px; 
-            border-radius: 6px; 
-            font-size: 0.8rem; 
-            cursor: pointer; 
-            width: 100%; 
-            font-weight: 500; 
-        }
-        .btn-delete:hover { background: #cc0000; }
-        .upload-status { font-size: 0.82rem; color: var(--gold); font-weight: 600; margin-top: 6px; }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <header>
-        <h1>Tulsi Events - Admin Panel</h1>
-        <a href="index.html" target="_blank" class="view-btn">Live Site ↗</a>
-    </header>
-
-    <!-- SECTION 1: ADD VENUE -->
-    <div class="card">
-        <h2>🏛️ Naya Marriage Hall / Venue Add Karein</h2>
-        <div class="form-grid">
-            <div class="input-group">
-                <label>Venue Ka Naam (Title)</label>
-                <input type="text" id="venueName" placeholder="e.g. Tulsi Vatika Marriage Hall">
-            </div>
-            <div class="input-group">
-                <label>Location / Address</label>
-                <input type="text" id="venueLocation" placeholder="e.g. Babunia Road, Siwan">
-            </div>
-            <div class="input-group">
-                <label>Phone Number (Call Booking)</label>
-                <input type="text" id="venuePhone" value="8651222111">
-            </div>
-            <div class="input-group">
-                <label>Photo Chuniye (Auto ImgBB Upload)</label>
-                <input type="file" id="venueFile" accept="image/*">
-                <div class="upload-status" id="venueStatus"></div>
-            </div>
-        </div>
-        <button class="btn-submit" id="venueBtn" onclick="addVenue()">Venue Add Karein</button>
-        
-        <h3 style="margin-top: 25px; font-size: 0.95rem; color: #555;">Live Venues (Database):</h3>
-        <div class="items-list" id="venuesList">Loading venues...</div>
-    </div>
-
-    <!-- SECTION 2: ADD GALLERY -->
-    <div class="card">
-        <h2>📸 Event Gallery Me Photo Add Karein</h2>
-        <div class="form-grid">
-            <div class="input-group" style="grid-column: 1 / -1;">
-                <label>Photo Caption / Title</label>
-                <input type="text" id="galleryTitle" placeholder="e.g. Grand Mandap Setup / Lawn Decor">
-            </div>
-            <div class="input-group" style="grid-column: 1 / -1;">
-                <label>Photo Chuniye (Auto ImgBB Upload)</label>
-                <input type="file" id="galleryFile" accept="image/*">
-                <div class="upload-status" id="galleryStatus"></div>
-            </div>
-        </div>
-        <button class="btn-submit" id="galleryBtn" onclick="addGallery()">Gallery Me Photo Add Karein</button>
-        
-        <h3 style="margin-top: 25px; font-size: 0.95rem; color: #555;">Live Gallery Items:</h3>
-        <div class="items-list" id="galleryList">Loading gallery...</div>
-    </div>
-</div>
-
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
-<script>
-    const IMGBB_API_KEY = "8104f8ac745d8dc4621b9d758844b418";
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyDySVpj8IkJsvw0Oy75N9FC918f7TDAo9g",
-        authDomain: "mozarc-72cbd.firebaseapp.com",
-        databaseURL: "https://mozarc-72cbd-default-rtdb.asia-southeast1.firebasedatabase.app",
-        projectId: "mozarc-72cbd",
-        storageBucket: "mozarc-72cbd.firebasestorage.app",
-        messagingSenderId: "389907773893",
-        appId: "1:389907773893:web:faab0a2a6d24c12e5bb3ac"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    async function uploadToImgBB(file) {
-        const formData = new FormData();
-        formData.append("image", file);
-        const res = await fetch("https://api.imgbb.com/1/upload?key=" + IMGBB_API_KEY, {
-            method: "POST",
-            body: formData
-        });
-        const data = await res.json();
-        if (data && data.success && data.data && data.data.url) {
-            return data.data.url;
-        } else {
-            throw new Error((data && data.error) ? data.error.message : "ImgBB Upload Failed");
-        }
-    }
-
-    async function addVenue() {
-        const title = document.getElementById('venueName').value.trim();
-        const location = document.getElementById('venueLocation').value.trim();
-        const phone = document.getElementById('venuePhone').value.trim();
-        const fileInput = document.getElementById('venueFile');
-        const status = document.getElementById('venueStatus');
-        const btn = document.getElementById('venueBtn');
-
-        if (!title || !location || fileInput.files.length === 0) {
-            alert("Kripya title, location aur photo teeno select karein!");
-            return;
-        }
-
-        try {
-            btn.disabled = true;
-            status.innerText = "⏳ Photo upload ho rahi hai...";
-            const imageUrl = await uploadToImgBB(fileInput.files[0]);
-
-            status.innerText = "⏳ Database me save ho raha hai...";
-            await db.ref('tulsi_venues').push({
-                title: title,
-                location: location,
-                phone: phone,
-                imageUrl: imageUrl
-            });
-
-            status.innerText = "";
-            document.getElementById('venueName').value = '';
-            document.getElementById('venueLocation').value = '';
-            fileInput.value = '';
-            alert("✅ Venue successfully add ho gaya!");
-        } catch (err) {
-            alert("Error: " + err.message);
-            status.innerText = "";
-        } finally {
-            btn.disabled = false;
-        }
-    }
-
-    db.ref('tulsi_venues').on('value', function(snapshot) {
-        const list = document.getElementById('venuesList');
-        list.innerHTML = '';
-        if (snapshot.exists()) {
-            snapshot.forEach(function(child) {
-                const item = child.val();
-                const key = child.key;
-                const card = document.createElement('div');
-                card.className = 'item-card';
-                card.innerHTML = 
-                    '<img src="' + item.imageUrl + '" alt="' + item.title + '">' +
-                    '<div class="item-card-body">' +
-                        '<div>' +
-                            '<h4>' + item.title + '</h4>' +
-                            '<p>📍 ' + item.location + '<br>📞 ' + item.phone + '</p>' +
-                        '</div>' +
-                        '<button class="btn-delete" onclick="deleteItem(\'tulsi_venues\', \'' + key + '\')">Delete</button>' +
-                    '</div>';
-                list.appendChild(card);
-            });
-        } else {
-            list.innerHTML = '<p style="color:#888;">Koi venue added nahi hai.</p>';
-        }
-    });
-
-    async function addGallery() {
-        const title = document.getElementById('galleryTitle').value.trim();
-        const fileInput = document.getElementById('galleryFile');
-        const status = document.getElementById('galleryStatus');
-        const btn = document.getElementById('galleryBtn');
-
-        if (!title || fileInput.files.length === 0) {
-            alert("Kripya title aur photo dono select karein!");
-            return;
-        }
-
-        try {
-            btn.disabled = true;
-            status.innerText = "⏳ Photo upload ho rahi hai...";
-            const imageUrl = await uploadToImgBB(fileInput.files[0]);
-
-            status.innerText = "⏳ Database me save ho raha hai...";
-            await db.ref('tulsi_gallery').push({
-                title: title,
-                imageUrl: imageUrl
-            });
-
-            status.innerText = "";
-            document.getElementById('galleryTitle').value = '';
-            fileInput.value = '';
-            alert("✅ Gallery photo successfully add ho gayi!");
-        } catch (err) {
-            alert("Error: " + err.message);
-            status.innerText = "";
-        } finally {
-            btn.disabled = false;
-        }
-    }
-
-    db.ref('tulsi_gallery').on('value', function(snapshot) {
-        const list = document.getElementById('galleryList');
-        list.innerHTML = '';
-        if (snapshot.exists()) {
-            snapshot.forEach(function(child) {
-                const item = child.val();
-                const key = child.key;
-                const card = document.createElement('div');
-                card.className = 'item-card';
-                card.innerHTML = 
-                    '<img src="' + item.imageUrl + '" alt="' + item.title + '">' +
-                    '<div class="item-card-body">' +
-                        '<div>' +
-                            '<h4>' + item.title + '</h4>' +
-                        '</div>' +
-                        '<button class="btn-delete" onclick="deleteItem(\'tulsi_gallery\', \'' + key + '\')">Delete</button>' +
-                    '</div>';
-                list.appendChild(card);
-            });
-        } else {
-            list.innerHTML = '<p style="color:#888;">Koi gallery photo added nahi hai.</p>';
-        }
-    });
-
-    function deleteItem(node, key) {
-        if (confirm("Kya aap ise sach me delete karna chahte hain?")) {
-            db.ref(node).child(key).remove()
-                .then(function() {
-                    alert("Deleted successfully!");
-                })
-                .catch(function(err) {
-                    alert("Error: " + err.message);
-                });
-        }
-    }
-</script>
-</body>
-</html>
-
