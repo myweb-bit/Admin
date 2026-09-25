@@ -235,12 +235,20 @@
         <a href="https://myweb-bit.github.io/Tulsi-event-hotel/" target="_blank" class="view-site-btn">Live Website ↗</a>
     </header>
 
-    <!-- SECTION 1: SOCIAL LINKS & CONTACTS -->
+    <!-- SECTION 1: SOCIAL LINKS, CONTACTS & GROQ AI KEY -->
     <div class="glass-panel">
         <div class="panel-heading">
-            <h2 class="cinzel">🌐 User Panel Social Media & Contacts</h2>
+            <h2 class="cinzel">🌐 User Panel Config & Groq AI Key</h2>
         </div>
         <div class="grid-2">
+            <div class="field-group">
+                <label>Groq AI API Key (gsk_...)</label>
+                <input type="text" id="siteGroqKey" class="glass-input" placeholder="gsk_...">
+            </div>
+            <div class="field-group">
+                <label>Main Booking Phone Number</label>
+                <input type="text" id="sitePhone" class="glass-input" placeholder="e.g. 8651222111">
+            </div>
             <div class="field-group">
                 <label>Official Email ID</label>
                 <input type="email" id="siteEmail" class="glass-input" placeholder="e.g. contact@tulsievents.com">
@@ -249,16 +257,12 @@
                 <label>Instagram Profile Link</label>
                 <input type="url" id="siteInstagram" class="glass-input" placeholder="https://instagram.com/yourprofile">
             </div>
-            <div class="field-group">
+            <div class="field-group" style="grid-column: 1 / -1;">
                 <label>Facebook Page Link</label>
                 <input type="url" id="siteFacebook" class="glass-input" placeholder="https://facebook.com/yourpage">
             </div>
-            <div class="field-group">
-                <label>Main Booking Phone Number</label>
-                <input type="text" id="sitePhone" class="glass-input" placeholder="e.g. 8651222111">
-            </div>
         </div>
-        <button class="btn-gold-3d" id="btnSaveConfig" onclick="saveGlobalConfig()">Save All Social Links & Contacts</button>
+        <button class="btn-gold-3d" id="btnSaveConfig" onclick="saveGlobalConfig()">Save All Config & Groq Key</button>
     </div>
 
     <!-- SECTION 2: ADD VENUE (With Description Space) -->
@@ -399,11 +403,12 @@
         }
     }
 
-    // 1. SYNC SOCIAL CONFIG
+    // 1. SYNC SOCIAL CONFIG & GROQ KEY
     const configRef = db.ref('tulsi_config');
     configRef.on('value', function(snapshot) {
         if (snapshot.exists()) {
             const data = snapshot.val();
+            if (data.groqKey) document.getElementById('siteGroqKey').value = data.groqKey;
             if (data.email) document.getElementById('siteEmail').value = data.email;
             if (data.instagram) document.getElementById('siteInstagram').value = data.instagram;
             if (data.facebook) document.getElementById('siteFacebook').value = data.facebook;
@@ -412,6 +417,7 @@
     });
 
     async function saveGlobalConfig() {
+        const groqKey = document.getElementById('siteGroqKey').value.trim();
         const email = document.getElementById('siteEmail').value.trim();
         const instagram = document.getElementById('siteInstagram').value.trim();
         const facebook = document.getElementById('siteFacebook').value.trim();
@@ -422,18 +428,19 @@
             btn.disabled = true;
             btn.innerText = "Saving...";
             await configRef.update({
+                groqKey: groqKey,
                 email: email,
                 instagram: instagram,
                 facebook: facebook,
                 phone: phone,
                 updatedAt: Date.now()
             });
-            showToast("✨ Social IDs & Contacts Updated!");
+            showToast("✨ Groq Key & Config Updated!");
         } catch (err) {
             alert("Error: " + err.message);
         } finally {
             btn.disabled = false;
-            btn.innerText = "Save All Social Links & Contacts";
+            btn.innerText = "Save All Config & Groq Key";
         }
     }
 
@@ -497,13 +504,11 @@
                 const item = child.val();
                 const key = child.key;
 
-                // Add to Select Dropdown
                 const opt = document.createElement('option');
                 opt.value = key;
                 opt.innerText = item.title;
                 select.appendChild(opt);
 
-                // Add to Venue Shelf
                 const card = document.createElement('div');
                 card.className = 'item-3d-card';
                 card.innerHTML = 
@@ -547,7 +552,6 @@
             const imageUrl = await uploadToImgBB(fileInput.files[0]);
 
             status.innerText = "⏳ Linking to venue gallery...";
-            // Saves specifically inside this venue's node
             await db.ref('tulsi_venues/' + venueKey + '/gallery').push({
                 title: title || "Venue Photo",
                 imageUrl: imageUrl,
@@ -569,7 +573,6 @@
         }
     }
 
-    // Load Gallery Shelf on Venue Select Change
     document.getElementById('galleryVenueSelect').addEventListener('change', function() {
         loadVenueGalleryShelf(this.value);
     });
