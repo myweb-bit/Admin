@@ -19,7 +19,7 @@
             --border-gold: rgba(212, 175, 55, 0.25);
         }
         * { margin:0; padding:0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background: var(--bg-deep); color: var(--text-light); padding: 15px; }
+        body { background: var(--bg-deep); color: var(--text-light); padding: 15px; transition: background-color 0.3s ease; }
         .container { max-width: 950px; margin: 0 auto; }
         
         .top-bar { 
@@ -42,12 +42,13 @@
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
         .form-group { display: flex; flex-direction: column; gap: 5px; }
         label { font-size: 0.85rem; color: #cbd5e1; font-weight: 600; }
-        input, textarea { background: #050b16; border: 1px solid #1e3256; border-radius: 8px; padding: 10px; color: #fff; font-size: 0.9rem; outline: none; width: 100%; }
+        input, textarea, select { background: #050b16; border: 1px solid #1e3256; border-radius: 8px; padding: 10px; color: #fff; font-size: 0.9rem; outline: none; width: 100%; }
         input:focus, textarea:focus { border-color: var(--gold); }
         textarea { resize: vertical; min-height: 75px; }
         
         .btn-save { background: var(--gold); color: #030712; border: none; padding: 11px 22px; border-radius: 10px; font-weight: 700; cursor: pointer; margin-top: 14px; font-size: 0.95rem; }
         .btn-danger { background: #ef4444; color: #fff; border: none; padding: 7px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
+        .btn-reset { background: #334155; color: #f8fafc; border: 1px solid #64748b; padding: 11px 18px; border-radius: 10px; font-weight: 700; cursor: pointer; margin-top: 14px; font-size: 0.9rem; }
         .upload-status { font-size: 0.75rem; color: #38bdf8; margin-top: 2px; }
 
         .venue-list-item { background: #050b16; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 16px; margin-top: 15px; }
@@ -64,6 +65,7 @@
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: var(--bg-deep); z-index: 999999; display: none; flex-direction: column;
             overflow-y: auto; overflow-x: hidden;
+            transition: background-color 0.3s ease;
         }
         .live-top-panel {
             position: sticky; top: 0; left: 0; right: 0;
@@ -86,17 +88,66 @@
 
         #quickEditModal {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0,0,0,0.75); backdrop-filter: blur(8px);
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
             z-index: 1000001; display: none; align-items: center; justify-content: center; padding: 15px;
         }
         .quick-edit-card {
             background: #0f1c34; border: 1px solid var(--border-gold);
-            border-radius: 16px; padding: 22px; width: 100%; max-width: 480px;
+            border-radius: 16px; padding: 22px; width: 100%; max-width: 580px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.9);
         }
         .quick-edit-card h3 { color: var(--gold-bright); margin-bottom: 12px; font-size: 1.15rem; }
-        .quick-edit-card textarea { width: 100%; min-height: 90px; margin-bottom: 15px; }
-        .quick-actions { display: flex; justify-content: flex-end; gap: 10px; }
+        
+        .toolbar {
+            display: flex; gap: 8px; flex-wrap: wrap; background: #050b16; padding: 8px;
+            border-radius: 8px; border: 1px solid #1e3256; margin-bottom: 10px; align-items: center;
+        }
+        .tool-btn {
+            background: #162646; color: #fff; border: 1px solid rgba(255,255,255,0.15);
+            padding: 5px 10px; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.8rem;
+        }
+        .tool-btn:hover { background: var(--gold); color: #030712; }
+        .color-dot { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 2px solid #fff; display: inline-block; }
+        
+        #quickEditContentArea {
+            background: #050b16; border: 1px solid #1e3256; border-radius: 8px;
+            padding: 14px; min-height: 90px; color: #fff; font-size: 1.1rem;
+            outline: none; line-height: 1.5; margin-bottom: 15px;
+        }
+        #quickEditContentArea:focus { border-color: var(--gold); }
+        .quick-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; }
+
+        /* ROYAL SPARKLING AI BOT BUTTON */
+        #liveAiBotBtn {
+            position: fixed; z-index: 99999;
+            background: linear-gradient(135deg, #f5d77f 0%, #d4af37 50%, #996515 100%);
+            color: #030712; width: 62px; height: 62px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; box-shadow: 0 8px 30px rgba(212, 175, 55, 0.7);
+            border: 2px solid #ffffff;
+            transition: transform 0.2s, box-shadow 0.2s;
+            animation: royalPulse 2.5s infinite;
+        }
+        #liveAiBotBtn:hover { transform: scale(1.08); }
+        #liveAiBotBtn svg { width: 32px; height: 32px; fill: #030712; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+
+        @keyframes royalPulse {
+            0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7); }
+            70% { box-shadow: 0 0 0 16px rgba(212, 175, 55, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+        }
+
+        #aiChatBox {
+            position: fixed; bottom: 85px; right: 25px; width: 340px; height: 440px;
+            background: #0b1528; border: 2px solid var(--gold); border-radius: 18px;
+            display: none; flex-direction: column; z-index: 100000; overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.9);
+        }
+        .chat-header { background: #040914; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-gold); }
+        .chat-logs { flex: 1; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; font-size: 0.88rem; }
+        .msg-bot { background: #162646; color: #fff; padding: 8px 12px; border-radius: 12px 12px 12px 2px; align-self: flex-start; max-width: 85%; }
+        .msg-user { background: var(--gold); color: #030712; font-weight: 600; padding: 8px 12px; border-radius: 12px 12px 2px 12px; align-self: flex-end; max-width: 85%; }
+        .chat-footer { padding: 8px; display: flex; gap: 6px; background: #050b16; border-top: 1px solid #1e3256; }
     </style>
 </head>
 <body>
@@ -121,6 +172,51 @@
         </div>
     </div>
 
+    <!-- 0. WEBSITE BACKGROUND COLOR & RESET -->
+    <div class="card" style="border-color: var(--gold-bright);">
+        <h2>🎨 Website Background Color (बैकग्राउंड का रंग)</h2>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>वेबसाइट का मुख्य बैकग्राउंड कलर</label>
+                <input type="color" id="cfgBgColor" value="#030712" style="height:45px; cursor:pointer;" oninput="applyLiveBg(this.value)">
+            </div>
+            <div class="form-group">
+                <label>कार्ड/कंटेनर का रंग</label>
+                <input type="color" id="cfgCardBg" value="#0b1528" style="height:45px; cursor:pointer;">
+            </div>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn-save" onclick="saveColorConfig()">💾 Save Colors</button>
+            <button class="btn-reset" onclick="resetToOriginalTheme()">🔄 Reset to Original Theme (#030712)</button>
+        </div>
+    </div>
+
+    <!-- AI CHATBOT LOGO POSITION -->
+    <div class="card" style="border-color: #6366f1;">
+        <h2>🤖 AI Assistant Logo Position (बॉट का लोगो कहाँ रहेगा?)</h2>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Vertical Position (ऊपर-नीचे)</label>
+                <select id="cfgBotVertical">
+                    <option value="bottom">Bottom (नीचे)</option>
+                    <option value="top">Top (ऊपर)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Horizontal Position (बाएं-दाएं)</label>
+                <select id="cfgBotHorizontal">
+                    <option value="right">Right (दाईं तरफ)</option>
+                    <option value="left">Left (बाईं तरफ)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>किनारे से दूरी (Margin Offset: px)</label>
+                <input type="number" id="cfgBotOffset" value="25" min="5" max="200">
+            </div>
+        </div>
+        <button class="btn-save" onclick="saveBotPosConfig()">💾 Save Bot Position</button>
+    </div>
+
     <!-- 1. GLOBAL SETTINGS FORM -->
     <div class="card">
         <h2>1. Global Header & Hero Settings</h2>
@@ -136,6 +232,10 @@
             <div class="form-group">
                 <label>Official Phone Number</label>
                 <input type="text" id="cfgPhone" placeholder="8651222111">
+            </div>
+            <div class="form-group">
+                <label>Official WhatsApp Number</label>
+                <input type="text" id="cfgWhatsapp" placeholder="8651222111">
             </div>
             <div class="form-group">
                 <label>Location / Address</label>
@@ -228,7 +328,10 @@
 <div id="liveEditorOverlay">
     <div class="live-top-panel">
         <div>✏️ LIVE BUILDER: Jis text par click karenge, wahi se edit ho jayega!</div>
-        <button class="close-live-btn" onclick="closeLiveVisualBuilder()">✖ Close Live Mode</button>
+        <div style="display:flex; gap:10px; align-items:center;">
+            <a href="https://wa.me/918651222111?text=Namaste!%20Tulsi%20Events%20me%20booking%20ki%20jaankari%20chahiye." target="_blank" style="background:#25D366; color:#fff; text-decoration:none; padding:8px 14px; border-radius:20px; font-weight:bold; font-size:0.85rem; display:flex; align-items:center; gap:5px;">💬 WhatsApp</a>
+            <button class="close-live-btn" onclick="closeLiveVisualBuilder()">✖ Close Live Mode</button>
+        </div>
     </div>
 
     <header style="padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-gold); background: #040914;">
@@ -238,8 +341,8 @@
 
     <div style="text-align: center; padding: 50px 20px; background: radial-gradient(circle, #0f1c36 0%, #030712 100%);">
         <div class="editable-item" style="display:inline-block; border:1px solid var(--gold); color:var(--gold-bright); padding:5px 18px; border-radius:30px; font-size:0.85rem; margin-bottom:15px;" id="liveHeroBadge" onclick="triggerQuickEdit('Hero Badge', 'tulsi_config/heroBadge', this.innerText)">Banquet Hall & Hotel</div>
-        <h1 class="editable-item" style="font-size:2.4rem; color:#fff; margin-bottom:12px;" id="liveHeroTitle" onclick="triggerQuickEdit('Hero Title', 'tulsi_config/heroTitle', this.innerText)">Tulsi Events & Hotels Pvt. Ltd</h1>
-        <p class="editable-item" style="color:var(--gold); font-style:italic; font-size:1.2rem;" id="liveTagline" onclick="triggerQuickEdit('Tagline', 'tulsi_config/tagline', this.innerText.replace(/\"/g, ''))">"घर जैसा व्यवहार पाएँ..."</p>
+        <h1 class="editable-item" style="font-size:2.4rem; color:#fff;" id="liveHeroTitle" onclick="triggerQuickEdit('Hero Title', 'tulsi_config/heroTitle', this.innerHTML, true, 'heroTitle')">Tulsi Events & Hotels Pvt. Ltd</h1>
+        <p class="editable-item" style="color:var(--gold); font-style:italic; font-size:1.2rem;" id="liveTagline" onclick="triggerQuickEdit('Tagline', 'tulsi_config/tagline', this.innerHTML, true, 'tagline')">"घर जैसा व्यवहार पाएँ..."</p>
     </div>
 
     <div style="padding: 40px 20px; text-align:center;">
@@ -252,13 +355,69 @@
         <p class="editable-item" style="color:var(--text-muted); font-size:0.95rem; margin-bottom:8px;" id="liveAddress" onclick="triggerQuickEdit('Address', 'tulsi_config/address', this.innerText.replace('📍 ', ''))">📍 Siwan, Bihar</p>
         <p class="editable-item" style="color:var(--gold); font-size:0.95rem;" id="liveFooterPhone" onclick="triggerQuickEdit('Footer Phone', 'tulsi_config/phone', this.innerText.replace('📞 ', ''))">📞 8651222111</p>
     </footer>
+
+    <!-- ROYAL AI BOT BUTTON -->
+    <div id="liveAiBotBtn" onclick="toggleChatPreview()" title="Tulsi Royal AI Assistant">
+        <svg viewBox="0 0 24 24">
+            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+        </svg>
+    </div>
+
+    <!-- AI CHAT TEST WINDOW -->
+    <div id="aiChatBox">
+        <div class="chat-header">
+            <span style="font-weight:700; color:var(--gold-bright);">👑 Tulsi Royal AI Assistant</span>
+            <span style="cursor:pointer; color:#ef4444; font-weight:bold;" onclick="toggleChatPreview()">✖</span>
+        </div>
+        <div class="chat-logs" id="chatLogs">
+            <div class="msg-bot">नमस्ते! 🙏 Tulsi Events & Hotels Pvt. Ltd में आपका स्वागत है। सीवान में बैंक्वेट हॉल, लॉन, डीलक्स रूम्स या कैटरिंग बुकिंग के लिए मैं आपकी क्या मदद कर सकता हूँ?</div>
+        </div>
+        <div class="chat-footer">
+            <input type="text" id="chatInput" placeholder="अपना सवाल पूछें..." onkeypress="if(event.key==='Enter') sendChatMessage()">
+            <button class="btn-save" style="margin:0; padding:6px 14px;" onclick="sendChatMessage()">भेजें</button>
+        </div>
+    </div>
 </div>
 
 <!-- QUICK EDIT MODAL POPUP -->
 <div id="quickEditModal">
     <div class="quick-edit-card">
         <h3 id="quickEditTitle">Edit Item</h3>
-        <textarea id="quickEditTextInput"></textarea>
+
+        <!-- Text formatting toolbar for Multi-Color & Glow -->
+        <label style="font-size:0.8rem; color:#cbd5e1;">टेक्स्ट को सेलेक्ट करके रंग या ग्लो दें:</label>
+        <div class="toolbar">
+            <span class="color-dot" style="background:#f5d77f;" title="Gold" onclick="applyTextColor('#f5d77f')"></span>
+            <span class="color-dot" style="background:#ffffff;" title="White" onclick="applyTextColor('#ffffff')"></span>
+            <span class="color-dot" style="background:#38bdf8;" title="Neon Blue" onclick="applyTextColor('#38bdf8')"></span>
+            <span class="color-dot" style="background:#ef4444;" title="Red" onclick="applyTextColor('#ef4444')"></span>
+            <span class="color-dot" style="background:#10b981;" title="Green" onclick="applyTextColor('#10b981')"></span>
+            <input type="color" onchange="applyTextColor(this.value)" style="width:26px; height:24px; border:none; background:none; cursor:pointer;" title="Any Color">
+            <button type="button" class="tool-btn" onclick="applyGlowEffect('gold')">✨ Gold Glow</button>
+            <button type="button" class="tool-btn" onclick="applyGlowEffect('neon')">🌟 Neon Glow</button>
+            <button type="button" class="tool-btn" onclick="applyGlowEffect('none')">🚫 No Glow</button>
+        </div>
+
+        <div id="quickEditContentArea" contenteditable="true"></div>
+
+        <!-- Position & Size Sliders -->
+        <div id="positionSlidersBox" style="display:none; margin-top:10px;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div class="form-group">
+                    <label>फॉन्ट साइज़: <span id="lblSize" style="color:var(--gold-bright);">40px</span></label>
+                    <input type="range" id="sliderSize" min="14" max="75" value="40" oninput="adjustLiveSliderPreview()">
+                </div>
+                <div class="form-group">
+                    <label>ऊपर से जगह (Top Spacing): <span id="lblTop" style="color:var(--gold-bright);">20px</span></label>
+                    <input type="range" id="sliderTop" min="0" max="150" value="20" oninput="adjustLiveSliderPreview()">
+                </div>
+            </div>
+            <div class="form-group" style="margin-top:6px;">
+                <label>नीचे से जगह (Bottom Spacing): <span id="lblBottom" style="color:var(--gold-bright);">20px</span></label>
+                <input type="range" id="sliderBottom" min="0" max="150" value="20" oninput="adjustLiveSliderPreview()">
+            </div>
+        </div>
+
         <div class="quick-actions">
             <button class="btn-danger" onclick="closeQuickEdit()">Cancel</button>
             <button class="btn-save" style="margin-top:0;" onclick="saveQuickEdit()">💾 Update Now</button>
@@ -283,7 +442,86 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
+    // GROQ API KEY CONFIGURATION (DIRECT & INTEGRATED)
+    const GROQ_API_KEY = "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";
+
     let activeEditPath = "";
+    let activeItemType = "";
+    let globalConfigCache = {};
+
+    function applyTextColor(color) {
+        document.execCommand('styleWithCSS', false, true);
+        document.execCommand('foreColor', false, color);
+    }
+
+    function applyGlowEffect(type) {
+        const area = document.getElementById('quickEditContentArea');
+        if(type === 'gold') {
+            area.style.textShadow = '0 0 15px rgba(245, 215, 127, 0.8), 0 0 30px rgba(212, 175, 55, 0.5)';
+        } else if(type === 'neon') {
+            area.style.textShadow = '0 0 15px rgba(56, 189, 248, 0.9), 0 0 25px rgba(14, 165, 233, 0.6)';
+        } else {
+            area.style.textShadow = 'none';
+        }
+    }
+
+    // LIVE POSITIONING PREVIEW (खिसकाने पर तुरंत दिखेगा)
+    function adjustLiveSliderPreview() {
+        const s = document.getElementById('sliderSize').value;
+        const t = document.getElementById('sliderTop').value;
+        const b = document.getElementById('sliderBottom').value;
+
+        document.getElementById('lblSize').innerText = s + 'px';
+        document.getElementById('lblTop').innerText = t + 'px';
+        document.getElementById('lblBottom').innerText = b + 'px';
+
+        const area = document.getElementById('quickEditContentArea');
+        area.style.fontSize = s + 'px';
+
+        if(activeItemType === 'heroTitle') {
+            const h = document.getElementById('liveHeroTitle');
+            if(h) {
+                h.style.fontSize = s + 'px';
+                h.style.marginTop = t + 'px';
+                h.style.marginBottom = b + 'px';
+            }
+        } else if(activeItemType === 'tagline') {
+            const tag = document.getElementById('liveTagline');
+            if(tag) {
+                tag.style.fontSize = s + 'px';
+                tag.style.marginTop = t + 'px';
+                tag.style.marginBottom = b + 'px';
+            }
+        }
+    }
+
+    function applyLiveBg(color) {
+        document.body.style.backgroundColor = color;
+        const overlay = document.getElementById('liveEditorOverlay');
+        if(overlay) overlay.style.backgroundColor = color;
+    }
+
+    function resetToOriginalTheme() {
+        const defaultColor = "#030712";
+        const defaultCard = "#0b1528";
+        document.getElementById('cfgBgColor').value = defaultColor;
+        document.getElementById('cfgCardBg').value = defaultCard;
+        applyLiveBg(defaultColor);
+
+        db.ref('tulsi_config').update({
+            bgColor: defaultColor,
+            cardBg: defaultCard
+        }).then(() => alert("Original Royal Dark Theme Restored!"));
+    }
+
+    function saveColorConfig() {
+        const bg = document.getElementById('cfgBgColor').value;
+        const card = document.getElementById('cfgCardBg').value;
+        db.ref('tulsi_config').update({
+            bgColor: bg,
+            cardBg: card
+        }).then(() => alert("Background Colors Saved!"));
+    }
 
     async function uploadToImgbb(fileInput, targetInputId, statusId) {
         const file = fileInput.files[0];
@@ -316,9 +554,12 @@
     db.ref('tulsi_config').on('value', (snap) => {
         if(snap.exists()) {
             const c = snap.val();
+            globalConfigCache = c;
+
             document.getElementById('cfgSiteName').value = c.siteName || '';
             document.getElementById('cfgTagline').value = c.tagline || '';
             document.getElementById('cfgPhone').value = c.phone || '';
+            document.getElementById('cfgWhatsapp').value = c.whatsapp || c.phone || '8651222111';
             document.getElementById('cfgAddress').value = c.address || '';
             document.getElementById('cfgHeroBadge').value = c.heroBadge || '';
             document.getElementById('cfgHeroTitle').value = c.heroTitle || '';
@@ -327,11 +568,48 @@
             document.getElementById('cfgYoutube').value = c.youtube || '';
             document.getElementById('cfgEmail').value = c.email || '';
 
+            // Background Color Sync
+            if(c.bgColor) {
+                document.getElementById('cfgBgColor').value = c.bgColor;
+                applyLiveBg(c.bgColor);
+            }
+            if(c.cardBg) document.getElementById('cfgCardBg').value = c.cardBg;
+
+            // Bot Positions
+            if(c.botVertical) document.getElementById('cfgBotVertical').value = c.botVertical;
+            if(c.botHorizontal) document.getElementById('cfgBotHorizontal').value = c.botHorizontal;
+            if(c.botOffset) document.getElementById('cfgBotOffset').value = c.botOffset;
+
+            const botEl = document.getElementById('liveAiBotBtn');
+            const vPos = c.botVertical || 'bottom';
+            const hPos = c.botHorizontal || 'right';
+            const offset = (c.botOffset || 25) + 'px';
+
+            botEl.style.top = vPos === 'top' ? offset : 'auto';
+            botEl.style.bottom = vPos === 'bottom' ? offset : 'auto';
+            botEl.style.left = hPos === 'left' ? offset : 'auto';
+            botEl.style.right = hPos === 'right' ? offset : 'auto';
+
             document.getElementById('liveLogoText').innerText = c.siteName ? "✨ " + c.siteName : "✨ Tulsi Events";
             document.getElementById('liveHeaderPhone').innerText = c.phone ? "📞 " + c.phone : "📞 8651222111";
             document.getElementById('liveHeroBadge').innerText = c.heroBadge || "Banquet Hall & Hotel";
-            document.getElementById('liveHeroTitle').innerText = c.heroTitle || "Tulsi Events & Hotels Pvt. Ltd";
-            document.getElementById('liveTagline').innerText = c.tagline ? `"${c.tagline}"` : `"घर जैसा व्यवहार पाएँ..."`;
+            
+            // Hero Title Dynamic Position & Glow
+            const liveH1 = document.getElementById('liveHeroTitle');
+            liveH1.innerHTML = c.heroTitleHtml || c.heroTitle || "Tulsi Events & Hotels Pvt. Ltd";
+            liveH1.style.fontSize = (c.heroTitleSize || 42) + 'px';
+            liveH1.style.marginTop = (c.heroTitleTop || 20) + 'px';
+            liveH1.style.marginBottom = (c.heroTitleBottom || 20) + 'px';
+            liveH1.style.textShadow = c.heroTitleGlow || 'none';
+
+            // Tagline Dynamic Position & Glow
+            const liveTag = document.getElementById('liveTagline');
+            liveTag.innerHTML = c.taglineHtml || c.tagline || `"घर जैसा व्यवहार पाएँ..."`;
+            liveTag.style.fontSize = (c.taglineSize || 20) + 'px';
+            liveTag.style.marginTop = (c.taglineTop || 10) + 'px';
+            liveTag.style.marginBottom = (c.taglineBottom || 10) + 'px';
+            liveTag.style.textShadow = c.taglineGlow || 'none';
+
             document.getElementById('liveAddress').innerText = c.address ? `📍 ${c.address}` : "📍 Siwan, Bihar";
             document.getElementById('liveFooterPhone').innerText = c.phone ? `📞 ${c.phone}` : "📞 8651222111";
         }
@@ -342,10 +620,19 @@
             siteName: document.getElementById('cfgSiteName').value,
             tagline: document.getElementById('cfgTagline').value,
             phone: document.getElementById('cfgPhone').value,
+            whatsapp: document.getElementById('cfgWhatsapp').value,
             address: document.getElementById('cfgAddress').value,
             heroBadge: document.getElementById('cfgHeroBadge').value,
             heroTitle: document.getElementById('cfgHeroTitle').value
         }).then(() => alert("Website Settings Saved!"));
+    }
+
+    function saveBotPosConfig() {
+        db.ref('tulsi_config').update({
+            botVertical: document.getElementById('cfgBotVertical').value,
+            botHorizontal: document.getElementById('cfgBotHorizontal').value,
+            botOffset: document.getElementById('cfgBotOffset').value
+        }).then(() => alert("AI Bot Position Saved!"));
     }
 
     function saveSocialConfig() {
@@ -536,12 +823,37 @@
         document.getElementById('liveEditorOverlay').style.display = 'none';
     }
 
-    function triggerQuickEdit(title, path, currentVal) {
+    function triggerQuickEdit(title, path, currentVal, hasSliders = false, type = "") {
         activeEditPath = path;
+        activeItemType = type;
         document.getElementById('quickEditTitle').innerText = `✏️ Edit: ${title}`;
-        document.getElementById('quickEditTextInput').value = currentVal.trim();
+        
+        const area = document.getElementById('quickEditContentArea');
+        area.innerHTML = currentVal.trim();
+        
+        const sliderBox = document.getElementById('positionSlidersBox');
+        if(hasSliders) {
+            sliderBox.style.display = 'block';
+            const c = globalConfigCache;
+            if(type === 'heroTitle') {
+                document.getElementById('sliderSize').value = c.heroTitleSize || 42;
+                document.getElementById('sliderTop').value = c.heroTitleTop || 20;
+                document.getElementById('sliderBottom').value = c.heroTitleBottom || 20;
+                area.style.textShadow = c.heroTitleGlow || 'none';
+            } else if(type === 'tagline') {
+                document.getElementById('sliderSize').value = c.taglineSize || 20;
+                document.getElementById('sliderTop').value = c.taglineTop || 10;
+                document.getElementById('sliderBottom').value = c.taglineBottom || 10;
+                area.style.textShadow = c.taglineGlow || 'none';
+            }
+            adjustLiveSliderPreview();
+        } else {
+            sliderBox.style.display = 'none';
+            area.style.textShadow = 'none';
+        }
+
         document.getElementById('quickEditModal').style.display = 'flex';
-        document.getElementById('quickEditTextInput').focus();
+        area.focus();
     }
 
     function closeQuickEdit() {
@@ -549,14 +861,87 @@
     }
 
     function saveQuickEdit() {
-        const newVal = document.getElementById('quickEditTextInput').value.trim();
+        const area = document.getElementById('quickEditContentArea');
+        const newHtml = area.innerHTML;
+        const newText = area.innerText.trim();
         if (!activeEditPath) return;
 
-        db.ref(activeEditPath).set(newVal).then(() => {
-            closeQuickEdit();
-        }).catch((err) => {
-            alert("Error saving: " + err.message);
-        });
+        let updateObj = {};
+
+        if(activeItemType === 'heroTitle') {
+            updateObj.heroTitleHtml = newHtml;
+            updateObj.heroTitle = newText;
+            updateObj.heroTitleSize = document.getElementById('sliderSize').value;
+            updateObj.heroTitleTop = document.getElementById('sliderTop').value;
+            updateObj.heroTitleBottom = document.getElementById('sliderBottom').value;
+            updateObj.heroTitleGlow = area.style.textShadow || 'none';
+            db.ref('tulsi_config').update(updateObj).then(() => closeQuickEdit());
+        } else if(activeItemType === 'tagline') {
+            updateObj.taglineHtml = newHtml;
+            updateObj.tagline = newText;
+            updateObj.taglineSize = document.getElementById('sliderSize').value;
+            updateObj.taglineTop = document.getElementById('sliderTop').value;
+            updateObj.taglineBottom = document.getElementById('sliderBottom').value;
+            updateObj.taglineGlow = area.style.textShadow || 'none';
+            db.ref('tulsi_config').update(updateObj).then(() => closeQuickEdit());
+        } else {
+            db.ref(activeEditPath).set(newText).then(() => {
+                closeQuickEdit();
+            }).catch((err) => {
+                alert("Error saving: " + err.message);
+            });
+        }
+    }
+
+    // AI CHAT PREVIEW & GROQ INTEGRATION
+    function toggleChatPreview() {
+        const box = document.getElementById('aiChatBox');
+        box.style.display = (box.style.display === 'flex') ? 'none' : 'flex';
+    }
+
+    async function sendChatMessage() {
+        const inp = document.getElementById('chatInput');
+        const q = inp.value.trim();
+        if(!q) return;
+
+        const logs = document.getElementById('chatLogs');
+        logs.innerHTML += `<div class="msg-user">${q}</div>`;
+        inp.value = '';
+        logs.scrollTop = logs.scrollHeight;
+
+        const loadingDiv = document.createElement('div');
+        loadingDiv.className = 'msg-bot';
+        loadingDiv.innerText = 'टाइप कर रहा है...';
+        logs.appendChild(loadingDiv);
+        logs.scrollTop = logs.scrollHeight;
+
+        try {
+            const systemPrompt = `You are the Royal AI Assistant of 'Tulsi Events & Hotels Pvt. Ltd' located in Siwan, Bihar. 
+Your goal is to politely assist clients with booking banquet halls, lawns, deluxe hotel rooms, and complete wedding planning services.
+Official Contact: 8651222111. Keep your replies polite, helpful, and concise in Hindi or Hinglish. Always reflect regal hospitality.`;
+
+            const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${GROQ_API_KEY}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    model: "llama-3.3-70b-versatile",
+                    messages: [
+                        { role: "system", content: systemPrompt },
+                        { role: "user", content: q }
+                    ]
+                })
+            });
+
+            const data = await res.json();
+            const botReply = data.choices?.[0]?.message?.content || "माफ़ कीजिए, कोई तकनीकी समस्या आई है। कृपया सीधे 8651222111 पर कॉल करें।";
+            loadingDiv.innerText = botReply;
+        } catch(err) {
+            loadingDiv.innerText = "संपर्क नहीं हो सका। कृपया सीधे 8651222111 पर कॉल करें।";
+        }
+        logs.scrollTop = logs.scrollHeight;
     }
 </script>
 </body>
