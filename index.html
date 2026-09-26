@@ -56,10 +56,12 @@
         .venue-title-text { font-size: 1.1rem; font-weight: 700; color: var(--gold-bright); }
         
         .gallery-box { background: #0b1528; border: 1px dashed var(--border-gold); padding: 14px; border-radius: 10px; margin-top: 14px; }
-        .gallery-thumbs { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
-        .thumb-unit { position: relative; width: 85px; }
-        .thumb-unit img { width: 85px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid var(--gold); }
-        .thumb-del { position: absolute; top: -5px; right: -5px; background: red; color: #fff; width: 18px; height: 18px; border-radius: 50%; font-size: 11px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .gallery-thumbs { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
+        .thumb-unit { position: relative; width: 95px; background:#050b16; border-radius:8px; padding:4px; border:1px solid #1e3256; }
+        .thumb-unit img { width: 100%; height: 65px; object-fit: cover; border-radius: 6px; border: 1px solid var(--gold); display:block; }
+        .thumb-unit .cap-text { font-size: 0.7rem; color: #cbd5e1; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 3px; }
+        .thumb-del { position: absolute; top: -6px; right: -6px; background: #ef4444; color: #fff; width: 22px; height: 22px; border-radius: 50%; font-size: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.5); font-weight: bold; border: 1px solid #fff; }
+        .thumb-del:hover { background: #b91c1c; }
 
         #liveEditorOverlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
@@ -163,12 +165,15 @@
         </button>
     </div>
 
-    <!-- IMGBB API KEY -->
+    <!-- IMGBB API KEY (SAVABLE IN DATABASE) -->
     <div class="card" style="border-color: #38bdf8;">
         <h2>🔑 ImgBB Image Upload API Key</h2>
         <div class="form-group">
-            <label>ImgBB Free API Key</label>
-            <input type="text" id="imgbbKey" value="51bf64c519a4e32d1ef957796440db7f">
+            <label>ImgBB Free API Key (जब चाहें बदलें और सेव करें)</label>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <input type="text" id="imgbbKey" value="51bf64c519a4e32d1ef957796440db7f" style="flex:1; min-width:250px;">
+                <button class="btn-save" style="margin-top:0;" onclick="saveImgbbKey()">💾 Save ImgBB Key</button>
+            </div>
         </div>
     </div>
 
@@ -442,7 +447,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // GROQ API KEY CONFIGURATION (DIRECT & INTEGRATED)
+    // GROQ API KEY CONFIGURATION
     const GROQ_API_KEY = "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";
 
     let activeEditPath = "";
@@ -465,7 +470,6 @@
         }
     }
 
-    // LIVE POSITIONING PREVIEW (खिसकाने पर तुरंत दिखेगा)
     function adjustLiveSliderPreview() {
         const s = document.getElementById('sliderSize').value;
         const t = document.getElementById('sliderTop').value;
@@ -523,11 +527,31 @@
         }).then(() => alert("Background Colors Saved!"));
     }
 
+    // SAVE IMGBB KEY TO DATABASE
+    function saveImgbbKey() {
+        const key = document.getElementById('imgbbKey').value.trim();
+        if(!key) {
+            alert("ImgBB API Key khali nahi ho sakti!");
+            return;
+        }
+        db.ref('tulsi_config/imgbbKey').set(key).then(() => {
+            alert("✅ ImgBB API Key Database me Save ho gayi!");
+        }).catch((err) => {
+            alert("Error: " + err.message);
+        });
+    }
+
+    // UPLOAD TO IMGBB AND GET URL
     async function uploadToImgbb(fileInput, targetInputId, statusId) {
         const file = fileInput.files[0];
         if (!file) return;
 
         const apiKey = document.getElementById('imgbbKey').value.trim();
+        if(!apiKey) {
+            alert("Pehle ImgBB API Key daalein!");
+            return;
+        }
+
         const statusDiv = document.getElementById(statusId);
         statusDiv.innerText = "⏳ Uploading photo...";
 
@@ -542,19 +566,25 @@
             const data = await res.json();
             if (data.success) {
                 document.getElementById(targetInputId).value = data.data.url;
-                statusDiv.innerText = "✅ Upload ho gaya!";
+                statusDiv.innerText = "✅ Upload ho gaya! Save button dabayein.";
             } else {
-                statusDiv.innerText = "❌ Fail: " + data.error.message;
+                statusDiv.innerText = "❌ Fail: " + (data.error ? data.error.message : "Upload error");
             }
         } catch (err) {
-            statusDiv.innerText = "❌ Error uploading image";
+            statusDiv.innerText = "❌ Error uploading image: " + err.message;
         }
     }
 
+    // DATABASE LISTENERS
     db.ref('tulsi_config').on('value', (snap) => {
         if(snap.exists()) {
             const c = snap.val();
             globalConfigCache = c;
+
+            // Load saved ImgBB Key
+            if(c.imgbbKey) {
+                document.getElementById('imgbbKey').value = c.imgbbKey;
+            }
 
             document.getElementById('cfgSiteName').value = c.siteName || '';
             document.getElementById('cfgTagline').value = c.tagline || '';
@@ -671,6 +701,7 @@
             document.getElementById('newVenTitle').value = '';
             document.getElementById('newVenLoc').value = '';
             document.getElementById('newVenImg').value = '';
+            document.getElementById('newVenFile').value = '';
             document.getElementById('newVenDesc').value = '';
             document.getElementById('newVenStatus').innerText = '';
         });
@@ -696,23 +727,34 @@
             const div = document.createElement('div');
             div.className = 'venue-list-item';
 
+            // Build Gallery Thumbs with safe delete handlers
             let galHTML = '';
             if(v.gallery) {
                 Object.keys(v.gallery).forEach((pKey) => {
                     const p = v.gallery[pKey];
+                    const cap = p.title || 'Photo';
                     galHTML += `
                         <div class="thumb-unit">
-                            <img src="${p.imageUrl}">
-                            <div class="thumb-del" onclick="deleteGalleryPhoto('${key}', '${pKey}')">✖</div>
+                            <img src="${p.imageUrl}" alt="${cap}">
+                            <div class="cap-text" title="${cap}">${cap}</div>
+                            <div class="thumb-del" title="Delete Photo" onclick="deleteGalleryPhoto('${key}', '${pKey}')">✖</div>
                         </div>
                     `;
                 });
             }
 
+            // Banner Photo Preview and Remove Option
+            const bannerPreview = v.imageUrl ? `
+                <div style="display:flex; align-items:center; gap:10px; margin-top:6px;">
+                    <img src="${v.imageUrl}" style="width:70px; height:45px; object-fit:cover; border-radius:6px; border:1px solid var(--gold);">
+                    <button type="button" class="btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="removeBannerImage('${key}')">❌ Banner Photo Hatayein</button>
+                </div>
+            ` : '<div style="font-size:0.8rem; color:#94a3b8; margin-top:4px;">(Koi banner photo nahi hai)</div>';
+
             div.innerHTML = `
                 <div class="venue-header-row">
                     <span class="venue-title-text">${v.title}</span>
-                    <button class="btn-danger" onclick="deleteVenue('${key}')">🗑️ Delete Hall</button>
+                    <button class="btn-danger" onclick="deleteVenue('${key}')">🗑️ Delete Complete Hall</button>
                 </div>
                 <div class="form-grid">
                     <div class="form-group">
@@ -731,11 +773,14 @@
                         <label>Button Color</label>
                         <input type="color" id="btnC_${key}" value="${v.btnColor || '#d4af37'}" style="height:42px; cursor:pointer;">
                     </div>
-                    <div class="form-group">
-                        <label>Banner Photo Change</label>
-                        <input type="file" accept="image/*" onchange="uploadToImgbb(this, 'img_${key}', 'st_${key}')">
-                        <input type="hidden" id="img_${key}" value="${v.imageUrl || ''}">
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Banner Photo (Update/Delete)</label>
+                        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                            <input type="file" id="file_${key}" accept="image/*" onchange="uploadToImgbb(this, 'img_${key}', 'st_${key}')" style="flex:1;">
+                            <input type="hidden" id="img_${key}" value="${v.imageUrl || ''}">
+                        </div>
                         <div class="upload-status" id="st_${key}"></div>
+                        ${bannerPreview}
                     </div>
                 </div>
                 <div class="form-group" style="margin-top:10px;">
@@ -745,23 +790,25 @@
                 <button class="btn-save" onclick="updateVenue('${key}')">💾 Save Hall Changes</button>
 
                 <div class="gallery-box">
-                    <label style="color:var(--gold-bright); font-weight:700;">📸 Nayi Photo Upload Karein:</label>
+                    <label style="color:var(--gold-bright); font-weight:700;">📸 Nayi Photo Upload Karein (Gallery):</label>
                     <div style="display:flex; gap:10px; margin-top:8px; flex-wrap:wrap; align-items:center;">
-                        <input type="file" id="gFile_${key}" accept="image/*" onchange="uploadToImgbb(this, 'gImg_${key}', 'gSt_${key}')">
+                        <input type="file" id="gFile_${key}" accept="image/*" onchange="uploadToImgbb(this, 'gImg_${key}', 'gSt_${key}')" style="flex:1; min-width:200px;">
                         <input type="hidden" id="gImg_${key}">
-                        <input type="text" id="gCap_${key}" placeholder="Photo Caption..." style="flex:1; min-width:150px;">
+                        <input type="text" id="gCap_${key}" placeholder="Photo Title/Caption..." style="flex:1; min-width:150px;">
                         <button class="btn-save" style="margin-top:0;" onclick="addGalleryPhoto('${key}')">+ Add To Gallery</button>
                     </div>
                     <div class="upload-status" id="gSt_${key}"></div>
-                    <div class="gallery-thumbs">${galHTML}</div>
+                    <div class="gallery-thumbs">${galHTML || '<p style="color:#94a3b8; font-size:0.8rem; margin-top:8px;">Abhi is hall ki koi photo nahi hai.</p>'}</div>
                 </div>
             `;
             vContainer.appendChild(div);
 
+            // Live Grid View
             const lCard = document.createElement('div');
             lCard.style.cssText = "background:#0f1c34; border:1px solid var(--border-gold); border-radius:18px; overflow:hidden; text-align:left; box-shadow:0 10px 30px rgba(0,0,0,0.6);";
+            const bImg = v.imageUrl || "https://images.unsplash.com/photo-1519167758481-83f550bb49b3";
             lCard.innerHTML = `
-                <img src="${v.imageUrl}" style="width:100%; height:200px; object-fit:cover;">
+                <img src="${bImg}" style="width:100%; height:200px; object-fit:cover;">
                 <div style="padding:18px;">
                     <h3 class="editable-item" style="color:#fff; font-size:1.3rem; margin-bottom:6px;" onclick="triggerQuickEdit('Venue Name', 'tulsi_venues/${key}/title', '${v.title}')">${v.title}</h3>
                     <p class="editable-item" style="color:var(--text-muted); font-size:0.9rem; margin-bottom:14px;" onclick="triggerQuickEdit('Venue Location', 'tulsi_venues/${key}/location', '${v.location || 'Siwan, Bihar'}')">📍 ${v.location || 'Siwan, Bihar'}</p>
@@ -775,6 +822,7 @@
         });
     });
 
+    // UPDATE VENUE DETAILS IN REALTIME DATABASE
     function updateVenue(key) {
         db.ref('tulsi_venues/' + key).update({
             title: document.getElementById('title_' + key).value,
@@ -783,35 +831,62 @@
             btnText: document.getElementById('btnT_' + key).value,
             btnColor: document.getElementById('btnC_' + key).value,
             description: document.getElementById('desc_' + key).value
-        }).then(() => alert("Hall details updated!"));
+        }).then(() => alert("✅ Hall details successfully saved to Database!"));
     }
 
-    function deleteVenue(key) {
-        if(confirm("Kya aap sach me is hall ko delete karna chahte hain?")) {
-            db.ref('tulsi_venues/' + key).remove();
+    // REMOVE MAIN BANNER IMAGE
+    function removeBannerImage(key) {
+        if(confirm("Kya aap is Hall ka Banner Photo delete karna chahte hain?")) {
+            db.ref('tulsi_venues/' + key).update({
+                imageUrl: ""
+            }).then(() => {
+                alert("Banner Photo hata di gayi!");
+            });
         }
     }
 
+    // DELETE ENTIRE VENUE
+    function deleteVenue(key) {
+        if(confirm("Kya aap sach me is pure hall aur iski sari photos ko delete karna chahte hain?")) {
+            db.ref('tulsi_venues/' + key).remove().then(() => {
+                alert("Hall successfully delete ho gaya!");
+            });
+        }
+    }
+
+    // ADD GALLERY PHOTO (SAVES DIRECTLY TO REALTIME DATABASE)
     function addGalleryPhoto(venueKey) {
         const url = document.getElementById('gImg_' + venueKey).value.trim();
         const cap = document.getElementById('gCap_' + venueKey).value.trim();
         if(!url) {
-            alert("Pehle photo upload hone dein!");
+            alert("Pehle photo upload hone dein ya upload link aane dein!");
             return;
         }
 
         db.ref('tulsi_venues/' + venueKey + '/gallery').push({
             imageUrl: url,
-            title: cap
+            title: cap || "Venue Photo",
+            timestamp: Date.now()
         }).then(() => {
+            alert("✅ Photo Gallery me jud gayi!");
             document.getElementById('gImg_' + venueKey).value = '';
+            document.getElementById('gFile_' + venueKey).value = '';
             document.getElementById('gCap_' + venueKey).value = '';
             document.getElementById('gSt_' + venueKey).innerText = '';
+        }).catch((err) => {
+            alert("Error: " + err.message);
         });
     }
 
+    // DELETE GALLERY PHOTO (PROPERLY DELETES FROM REALTIME DATABASE)
     function deleteGalleryPhoto(venueKey, photoKey) {
-        db.ref('tulsi_venues/' + venueKey + '/gallery/' + photoKey).remove();
+        if(confirm("Kya aap is photo ko delete karna chahte hain?")) {
+            db.ref('tulsi_venues/' + venueKey + '/gallery/' + photoKey).remove().then(() => {
+                // Realtime sync automatically removes it from the UI
+            }).catch((err) => {
+                alert("Photo delete nahi ho saki: " + err.message);
+            });
+        }
     }
 
     function openLiveVisualBuilder() {
