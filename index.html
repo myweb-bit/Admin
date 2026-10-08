@@ -47,12 +47,14 @@
         textarea { resize: vertical; min-height: 75px; }
         
         .btn-save { background: var(--gold); color: #030712; border: none; padding: 11px 22px; border-radius: 10px; font-weight: 700; cursor: pointer; margin-top: 14px; font-size: 0.95rem; }
+        .btn-success { background: #10b981; color: #fff; border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-success:hover { background: #059669; }
         .btn-danger { background: #ef4444; color: #fff; border: none; padding: 7px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
         .btn-reset { background: #334155; color: #f8fafc; border: 1px solid #64748b; padding: 11px 18px; border-radius: 10px; font-weight: 700; cursor: pointer; margin-top: 14px; font-size: 0.9rem; }
         .upload-status { font-size: 0.75rem; color: #38bdf8; margin-top: 2px; }
 
         .venue-list-item { background: #050b16; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 16px; margin-top: 15px; }
-        .venue-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .venue-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
         .venue-title-text { font-size: 1.1rem; font-weight: 700; color: var(--gold-bright); }
         
         .gallery-box { background: #0b1528; border: 1px dashed var(--border-gold); padding: 14px; border-radius: 10px; margin-top: 14px; }
@@ -258,7 +260,7 @@
         <button class="btn-save" onclick="saveGlobalConfig()">💾 Save Form Data</button>
     </div>
 
-    <!-- NEW: ABOUT US CMS SETTINGS -->
+    <!-- ABOUT US CMS SETTINGS -->
     <div class="card" style="border-color: #f5d77f;">
         <h2>ℹ️ About Us (ऊपर कोने वाले बटन का डेटा)</h2>
         <div class="form-grid">
@@ -274,7 +276,7 @@
         <button class="btn-save" onclick="saveAboutConfig()">💾 Save About Us</button>
     </div>
 
-    <!-- NEW: INVESTMENT & PARTNERSHIP SETTINGS (WITH POSITION ORDER) -->
+    <!-- INVESTMENT & PARTNERSHIP SETTINGS -->
     <div class="card" style="border-color: #10b981;">
         <h2>🤝 Investment & Partnership Settings</h2>
         <div class="form-grid">
@@ -329,9 +331,9 @@
         <button class="btn-save" onclick="saveSocialConfig()">💾 Save Social Links</button>
     </div>
 
-    <!-- 3. ADD NEW MARRIAGE HALL -->
+    <!-- 3. ADD NEW MARRIAGE HALL / VENUE -->
     <div class="card">
-        <h2>3. Naya Marriage Hall Jodein</h2>
+        <h2>3. Naya Marriage Hall Jodein (Hotels & Venues)</h2>
         <div class="form-grid">
             <div class="form-group">
                 <label>Hall Name</label>
@@ -374,6 +376,51 @@
             <p style="color:#94a3b8;">Venues load ho rahe hain...</p>
         </div>
     </div>
+
+    <!-- 5. ADD NEW UPCOMING PROJECT (FULLY CUSTOMIZABLE / OPTIONAL FIELDS) -->
+    <div class="card" style="border-color: #38bdf8;">
+        <h2>🌟 5. Naya Upcoming Project Jodein (Optional Fields Support)</h2>
+        <p style="color:#94a3b8; font-size:0.85rem; margin-bottom:12px;">(चाहे सिर्फ फोटो डालें, या टाइटल और फोटो, या पूरा विवरण - सब कुछ सपोर्टेड है)</p>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Project Title (Optional)</label>
+                <input type="text" id="newProjTitle" placeholder="Tulsi Sky Resort & Luxury Palace">
+            </div>
+            <div class="form-group">
+                <label>Location / City (Optional)</label>
+                <input type="text" id="newProjLoc" placeholder="Gopalganj Highway, Siwan">
+            </div>
+            <div class="form-group">
+                <label>Contact Phone / WhatsApp (Optional)</label>
+                <input type="text" id="newProPhone" placeholder="8651222111">
+            </div>
+            <div class="form-group">
+                <label>Button Text</label>
+                <input type="text" id="newProjBtnText" value="View Project & Gallery">
+            </div>
+            <div class="form-group" style="grid-column: 1 / -1;">
+                <label>Project Main Banner / 3D Render Photo</label>
+                <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                    <input type="file" id="newProjFile" accept="image/*" onchange="uploadToImgbb(this, 'newProjImg', 'newProjStatus')" style="flex:1;">
+                    <input type="hidden" id="newProjImg">
+                </div>
+                <div class="upload-status" id="newProjStatus"></div>
+            </div>
+        </div>
+        <div class="form-group" style="margin-top:12px;">
+            <label>Project Description / Architecture Highlights (Optional)</label>
+            <textarea id="newProjDesc" placeholder="5-Star upcoming wedding resort with helipad and 50 luxury suites..."></textarea>
+        </div>
+        <button class="btn-save" style="background:#38bdf8; color:#030712;" onclick="addUpcomingProject()">➕ Add Upcoming Project</button>
+    </div>
+
+    <!-- 6. MANAGE UPCOMING PROJECTS & SEPARATE GALLERIES -->
+    <div class="card" style="border-color: #38bdf8;">
+        <h2>🏗️ 6. Manage Upcoming Projects & Photo Galleries</h2>
+        <div id="existingProjectsContainer">
+            <p style="color:#94a3b8;">Upcoming projects load ho rahe hain...</p>
+        </div>
+    </div>
 </div>
 
 <!-- LIVE VISUAL BUILDER VIEW (TAAZA USER INTERFACE) -->
@@ -406,6 +453,14 @@
             <h2 style="color:var(--gold-bright); font-size:2rem; margin-bottom:8px;">Our Exclusive Venues</h2>
             <p style="color:var(--text-muted); margin-bottom:30px;">(Neeche kisi bhi hall ke naam, location ya enquiry par click karke direct edit karein)</p>
             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:25px; max-width:1100px; margin:auto;" id="liveVenuesGrid"></div>
+        </div>
+
+        <!-- Upcoming Projects Section (Live View) -->
+        <div style="padding: 40px 20px; text-align:center;" id="liveProjectsSection">
+            <div style="display:inline-block; background:rgba(14, 165, 233, 0.15); border:1px solid #38bdf8; color:#38bdf8; padding:5px 16px; border-radius:30px; font-size:0.8rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:10px;">Future Horizons</div>
+            <h2 style="color:#38bdf8; font-size:2rem; margin-bottom:8px;">🌟 Our Upcoming Projects</h2>
+            <p style="color:var(--text-muted); margin-bottom:30px;">(Neeche kisi bhi upcoming project ke title par click karke direct edit karein)</p>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:25px; max-width:1100px; margin:auto;" id="liveProjectsGrid"></div>
         </div>
 
         <!-- Investment Section (Live Editable) -->
@@ -970,7 +1025,7 @@
         }
     }
 
-    // ADD GALLERY PHOTO (SAVES DIRECTLY TO REALTIME DATABASE)
+    // ADD GALLERY PHOTO (HOTEL / VENUE)
     function addGalleryPhoto(venueKey) {
         const url = document.getElementById('gImg_' + venueKey).value.trim();
         const cap = document.getElementById('gCap_' + venueKey).value.trim();
@@ -994,16 +1049,278 @@
         });
     }
 
-    // DELETE GALLERY PHOTO (PROPERLY DELETES FROM REALTIME DATABASE)
+    // DELETE GALLERY PHOTO (HOTEL / VENUE)
     function deleteGalleryPhoto(venueKey, photoKey) {
         if(confirm("Kya aap is photo ko delete karna chahte hain?")) {
             db.ref('tulsi_venues/' + venueKey + '/gallery/' + photoKey).remove().then(() => {
-                // Realtime sync automatically removes it from the UI
+                // Realtime sync handles UI update
             }).catch((err) => {
                 alert("Photo delete nahi ho saki: " + err.message);
             });
         }
     }
+
+    // ==========================================
+    // 🌟 UPCOMING PROJECTS CMS LOGIC & FUNCTIONS
+    // ==========================================
+
+    // ADD NEW UPCOMING PROJECT (WITH OPTIONAL TITLE, DESC, LOCATION)
+    function addUpcomingProject() {
+        const title = document.getElementById('newProjTitle').value.trim();
+        const loc = document.getElementById('newProjLoc').value.trim();
+        const phone = document.getElementById('newProPhone').value.trim();
+        const btnText = document.getElementById('newProjBtnText').value.trim() || 'View Project & Gallery';
+        const img = document.getElementById('newProjImg').value.trim();
+        const desc = document.getElementById('newProjDesc').value.trim();
+
+        if(!img && !title) {
+            alert("Kam se kam Photo ya Title zaroor daalein!");
+            return;
+        }
+
+        db.ref('tulsi_projects').push({
+            title: title || "",
+            location: loc || "",
+            phone: phone || "8651222111",
+            btnText: btnText,
+            imageUrl: img || "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80",
+            description: desc || ""
+        }).then(() => {
+            alert("✅ Naya Upcoming Project jud gaya!");
+            document.getElementById('newProjTitle').value = '';
+            document.getElementById('newProjLoc').value = '';
+            document.getElementById('newProPhone').value = '';
+            document.getElementById('newProjImg').value = '';
+            document.getElementById('newProjFile').value = '';
+            document.getElementById('newProjDesc').value = '';
+            document.getElementById('newProjStatus').innerText = '';
+        }).catch((err) => {
+            alert("Error: " + err.message);
+        });
+    }
+
+    const pContainer = document.getElementById('existingProjectsContainer');
+    const liveProjGrid = document.getElementById('liveProjectsGrid');
+
+    // REALTIME LISTENER FOR UPCOMING PROJECTS
+    db.ref('tulsi_projects').on('value', (snap) => {
+        pContainer.innerHTML = '';
+        liveProjGrid.innerHTML = '';
+
+        if(!snap.exists()) {
+            pContainer.innerHTML = '<p style="color:#94a3b8;">Abhi koi upcoming project nahi mila.</p>';
+            liveProjGrid.innerHTML = '<p style="color:#94a3b8; grid-column:1/-1;">Abhi koi upcoming project nahi hai.</p>';
+            return;
+        }
+
+        const data = snap.val();
+        Object.keys(data).forEach((key) => {
+            const p = data[key];
+
+            const div = document.createElement('div');
+            div.className = 'venue-list-item';
+            div.style.borderColor = 'rgba(56, 189, 248, 0.3)';
+
+            // Project Gallery Thumbs
+            let pGalHTML = '';
+            if(p.gallery) {
+                Object.keys(p.gallery).forEach((pKey) => {
+                    const photo = p.gallery[pKey];
+                    const cap = photo.title || 'Visual';
+                    pGalHTML += `
+                        <div class="thumb-unit">
+                            <img src="${photo.imageUrl}" alt="${cap}">
+                            <div class="cap-text" title="${cap}">${cap}</div>
+                            <div class="thumb-del" title="Delete Visual" onclick="deleteProjectGalleryPhoto('${key}', '${pKey}')">✖</div>
+                        </div>
+                    `;
+                });
+            }
+
+            const pBannerPreview = p.imageUrl ? `
+                <div style="display:flex; align-items:center; gap:10px; margin-top:6px;">
+                    <img src="${p.imageUrl}" style="width:70px; height:45px; object-fit:cover; border-radius:6px; border:1px solid #38bdf8;">
+                    <button type="button" class="btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="removeProjectBanner('${key}')">❌ Banner Hatayein</button>
+                </div>
+            ` : '<div style="font-size:0.8rem; color:#94a3b8; margin-top:4px;">(Koi banner photo nahi hai)</div>';
+
+            div.innerHTML = `
+                <div class="venue-header-row">
+                    <span class="venue-title-text" style="color:#38bdf8;">🚧 ${p.title || '(Bina Title ka Project)'}</span>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                        <button class="btn-success" onclick="convertProjectToVenue('${key}')">🚀 Convert to Live Hotel / Venue</button>
+                        <button class="btn-danger" onclick="deleteProject('${key}')">🗑️ Delete Project</button>
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Project Title (Optional)</label>
+                        <input type="text" id="p_title_${key}" value="${p.title || ''}" placeholder="Project Title...">
+                    </div>
+                    <div class="form-group">
+                        <label>Location (Optional)</label>
+                        <input type="text" id="p_loc_${key}" value="${p.location || ''}" placeholder="Location...">
+                    </div>
+                    <div class="form-group">
+                        <label>WhatsApp / Phone</label>
+                        <input type="text" id="p_phone_${key}" value="${p.phone || '8651222111'}">
+                    </div>
+                    <div class="form-group">
+                        <label>Button Text</label>
+                        <input type="text" id="p_btnT_${key}" value="${p.btnText || 'View Project & Gallery'}">
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Project Banner / Render Photo</label>
+                        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                            <input type="file" id="p_file_${key}" accept="image/*" onchange="uploadToImgbb(this, 'p_img_${key}', 'p_st_${key}')" style="flex:1;">
+                            <input type="hidden" id="p_img_${key}" value="${p.imageUrl || ''}">
+                        </div>
+                        <div class="upload-status" id="p_st_${key}"></div>
+                        ${pBannerPreview}
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top:10px;">
+                    <label>Description / Architecture Details (Optional)</label>
+                    <textarea id="p_desc_${key}" placeholder="Description...">${p.description || ''}</textarea>
+                </div>
+                <button class="btn-save" style="background:#38bdf8; color:#030712;" onclick="updateProject('${key}')">💾 Save Project Changes</button>
+
+                <!-- Project Visuals & 3D Renders Gallery -->
+                <div class="gallery-box" style="border-color:#38bdf8;">
+                    <label style="color:#38bdf8; font-weight:700;">📸 Project 3D Visuals & Renders Upload Karein (Gallery):</label>
+                    <div style="display:flex; gap:10px; margin-top:8px; flex-wrap:wrap; align-items:center;">
+                        <input type="file" id="pgFile_${key}" accept="image/*" onchange="uploadToImgbb(this, 'pgImg_${key}', 'pgSt_${key}')" style="flex:1; min-width:200px;">
+                        <input type="hidden" id="pgImg_${key}">
+                        <input type="text" id="pgCap_${key}" placeholder="Visual Caption / 3D Render Title..." style="flex:1; min-width:150px;">
+                        <button class="btn-save" style="margin-top:0; background:#38bdf8; color:#030712;" onclick="addProjectGalleryPhoto('${key}')">+ Add To Project Gallery</button>
+                    </div>
+                    <div class="upload-status" id="pgSt_${key}"></div>
+                    <div class="gallery-thumbs">${pGalHTML || '<p style="color:#94a3b8; font-size:0.8rem; margin-top:8px;">Abhi is project ki koi photo/render nahi hai.</p>'}</div>
+                </div>
+            `;
+            pContainer.appendChild(div);
+
+            // Live Grid Representation
+            const plCard = document.createElement('div');
+            plCard.style.cssText = "background:#0f1c34; border:1px solid #38bdf8; border-radius:18px; overflow:hidden; text-align:left; box-shadow:0 10px 30px rgba(0,0,0,0.6); position:relative;";
+            const pBImg = p.imageUrl || "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80";
+            plCard.innerHTML = `
+                <div style="position:absolute; top:12px; right:12px; background:#0284c7; color:#fff; font-size:0.75rem; font-weight:bold; padding:4px 10px; border-radius:15px;">COMING SOON</div>
+                <img src="${pBImg}" style="width:100%; height:200px; object-fit:cover;">
+                <div style="padding:18px;">
+                    <h3 class="editable-item" style="color:#fff; font-size:1.3rem; margin-bottom:6px;" onclick="triggerQuickEdit('Project Title', 'tulsi_projects/${key}/title', '${p.title || ''}')">${p.title || '(No Title)'}</h3>
+                    <p class="editable-item" style="color:var(--text-muted); font-size:0.9rem; margin-bottom:12px;" onclick="triggerQuickEdit('Project Location', 'tulsi_projects/${key}/location', '${p.location || 'Siwan, Bihar'}')">📍 ${p.location || 'Siwan, Bihar'}</p>
+                    <div class="editable-item" style="background:#0284c7; color:#fff; padding:10px 14px; border-radius:10px; font-weight:bold; font-size:0.85rem; display:flex; justify-content:space-between;" onclick="triggerQuickEdit('Button Text', 'tulsi_projects/${key}/btnText', '${p.btnText || 'View Project & Gallery'}')">
+                        <div>${p.btnText || 'View Project & Gallery'}</div>
+                        <div>➔</div>
+                    </div>
+                </div>
+            `;
+            liveProjGrid.appendChild(plCard);
+        });
+    });
+
+    // UPDATE UPCOMING PROJECT IN FIREBASE
+    function updateProject(key) {
+        db.ref('tulsi_projects/' + key).update({
+            title: document.getElementById('p_title_' + key).value,
+            location: document.getElementById('p_loc_' + key).value,
+            phone: document.getElementById('p_phone_' + key).value,
+            btnText: document.getElementById('p_btnT_' + key).value,
+            imageUrl: document.getElementById('p_img_' + key).value,
+            description: document.getElementById('p_desc_' + key).value
+        }).then(() => alert("✅ Project details successfully saved to Database!"));
+    }
+
+    // REMOVE PROJECT BANNER IMAGE
+    function removeProjectBanner(key) {
+        if(confirm("Kya aap is Project ka Banner Photo hatana chahte hain?")) {
+            db.ref('tulsi_projects/' + key).update({
+                imageUrl: ""
+            }).then(() => alert("Project banner hata diya gaya!"));
+        }
+    }
+
+    // DELETE UPCOMING PROJECT
+    function deleteProject(key) {
+        if(confirm("Kya aap sach me is Upcoming Project aur iski photo gallery ko delete karna chahte hain?")) {
+            db.ref('tulsi_projects/' + key).remove().then(() => {
+                alert("Project delete ho gaya!");
+            });
+        }
+    }
+
+    // ADD PHOTO TO PROJECT GALLERY
+    function addProjectGalleryPhoto(projectKey) {
+        const url = document.getElementById('pgImg_' + projectKey).value.trim();
+        const cap = document.getElementById('pgCap_' + projectKey).value.trim();
+        if(!url) {
+            alert("Pehle photo upload hone dein ya upload link aane dein!");
+            return;
+        }
+
+        db.ref('tulsi_projects/' + projectKey + '/gallery').push({
+            imageUrl: url,
+            title: cap || "Visual Render",
+            timestamp: Date.now()
+        }).then(() => {
+            alert("✅ Project Visual Gallery me jud gaya!");
+            document.getElementById('pgImg_' + projectKey).value = '';
+            document.getElementById('pgFile_' + projectKey).value = '';
+            document.getElementById('pgCap_' + projectKey).value = '';
+            document.getElementById('pgSt_' + projectKey).innerText = '';
+        }).catch((err) => {
+            alert("Error: " + err.message);
+        });
+    }
+
+    // DELETE PHOTO FROM PROJECT GALLERY
+    function deleteProjectGalleryPhoto(projectKey, photoKey) {
+        if(confirm("Kya aap is render/photo ko delete karna chahte hain?")) {
+            db.ref('tulsi_projects/' + projectKey + '/gallery/' + photoKey).remove().then(() => {
+                // UI automatically synced
+            }).catch((err) => {
+                alert("Photo delete nahi ho saki: " + err.message);
+            });
+        }
+    }
+
+    // 🚀 1-CLICK: CONVERT UPCOMING PROJECT TO LIVE HOTEL / VENUE
+    function convertProjectToVenue(projectKey) {
+        db.ref('tulsi_projects/' + projectKey).once('value', (snap) => {
+            if(!snap.exists()) return;
+            const p = snap.val();
+
+            if(!confirm(`Kya aap "${p.title || 'Is Project'}" ko Live Hotels & Venues list me transfer karna chahte hain?`)) {
+                return;
+            }
+
+            // Create new Venue object with Project's details and gallery
+            const newVenueData = {
+                title: p.title || "Tulsi Luxury Venue",
+                location: p.location || "Siwan, Bihar",
+                phone: p.phone || "8651222111",
+                btnText: "Explore Details & Gallery",
+                btnColor: "#d4af37",
+                imageUrl: p.imageUrl || "https://images.unsplash.com/photo-1519167758481-83f550bb49b3",
+                description: p.description || "Grand wedding lawn & AC halls with royal amenities.",
+                gallery: p.gallery || null
+            };
+
+            // Push to tulsi_venues
+            db.ref('tulsi_venues').push(newVenueData).then(() => {
+                if(confirm("✅ Project safalta-purvak LIVE HOTELS & VENUES me convert ho gaya! Kya aap is project ko upcoming list se hatana chahte hain?")) {
+                    db.ref('tulsi_projects/' + projectKey).remove();
+                }
+            }).catch((err) => {
+                alert("Conversion error: " + err.message);
+            });
+        });
+    }
+
+    // ==========================================
+    // VISUAL EDITOR & QUICK EDIT
+    // ==========================================
 
     function openLiveVisualBuilder() {
         document.getElementById('liveEditorOverlay').style.display = 'flex';
