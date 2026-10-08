@@ -43,7 +43,7 @@
         .form-group { display: flex; flex-direction: column; gap: 5px; }
         label { font-size: 0.85rem; color: #cbd5e1; font-weight: 600; }
         input, textarea, select { background: #050b16; border: 1px solid #1e3256; border-radius: 8px; padding: 10px; color: #fff; font-size: 0.9rem; outline: none; width: 100%; }
-        input:focus, textarea:focus { border-color: var(--gold); }
+        input:focus, textarea:focus, select:focus { border-color: var(--gold); }
         textarea { resize: vertical; min-height: 75px; }
         
         .btn-save { background: var(--gold); color: #030712; border: none; padding: 11px 22px; border-radius: 10px; font-weight: 700; cursor: pointer; margin-top: 14px; font-size: 0.95rem; }
@@ -258,6 +258,53 @@
         <button class="btn-save" onclick="saveGlobalConfig()">💾 Save Form Data</button>
     </div>
 
+    <!-- NEW: ABOUT US CMS SETTINGS -->
+    <div class="card" style="border-color: #f5d77f;">
+        <h2>ℹ️ About Us (ऊपर कोने वाले बटन का डेटा)</h2>
+        <div class="form-grid">
+            <div class="form-group" style="grid-column: 1 / -1;">
+                <label>About Us Modal Title (शीर्षक)</label>
+                <input type="text" id="cfgAboutTitle" placeholder="About Tulsi Events">
+            </div>
+            <div class="form-group" style="grid-column: 1 / -1;">
+                <label>About Us Description (विवरण)</label>
+                <textarea id="cfgAboutText" style="min-height: 100px;" placeholder="तुलसी इवेंट्स एंड होटल्स सीवान में सबसे प्रतिष्ठित..."></textarea>
+            </div>
+        </div>
+        <button class="btn-save" onclick="saveAboutConfig()">💾 Save About Us</button>
+    </div>
+
+    <!-- NEW: INVESTMENT & PARTNERSHIP SETTINGS (WITH POSITION ORDER) -->
+    <div class="card" style="border-color: #10b981;">
+        <h2>🤝 Investment & Partnership Settings</h2>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>सेक्शन की स्थिति (Position / Order)</label>
+                <select id="cfgInvestOrder">
+                    <option value="2">नीचे रखें (Below Venues - Default)</option>
+                    <option value="-1">ऊपर लाएँ (Above Venues - Top)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>सेक्शन बैज (Badge Text)</label>
+                <input type="text" id="cfgInvestBadge" placeholder="Partnership & Growth">
+            </div>
+            <div class="form-group">
+                <label>मुख्य शीर्षक (Heading)</label>
+                <input type="text" id="cfgInvestTitle" placeholder="Contact for Investment & Partnership">
+            </div>
+            <div class="form-group">
+                <label>इन्वेस्टमेंट WhatsApp / Phone Number</label>
+                <input type="text" id="cfgInvestPhone" placeholder="8651222111">
+            </div>
+            <div class="form-group" style="grid-column: 1 / -1;">
+                <label>विवरण (Description)</label>
+                <textarea id="cfgInvestDesc" placeholder="Tulsi Events & Hotels Pvt. Ltd के साथ अपने व्यवसाय का विस्तार करें..."></textarea>
+            </div>
+        </div>
+        <button class="btn-save" onclick="saveInvestConfig()">💾 Save Investment Settings</button>
+    </div>
+
     <!-- 2. SOCIAL MEDIA LINKS -->
     <div class="card">
         <h2>2. Social Media Links</h2>
@@ -295,7 +342,7 @@
                 <input type="text" id="newVenLoc" placeholder="Chapra Road, Siwan">
             </div>
             <div class="form-group">
-                <label>Separate Phone Number</label>
+                <label>Booking Enquiry WhatsApp / Phone</label>
                 <input type="text" id="newVenPhone" placeholder="8651222111">
             </div>
             <div class="form-group">
@@ -329,31 +376,50 @@
     </div>
 </div>
 
-<!-- LIVE VISUAL BUILDER VIEW -->
+<!-- LIVE VISUAL BUILDER VIEW (TAAZA USER INTERFACE) -->
 <div id="liveEditorOverlay">
     <div class="live-top-panel">
-        <div>✏️ LIVE BUILDER: Jis text par click karenge, wahi se edit ho jayega!</div>
+        <div>✏️ LIVE BUILDER: Jis text par click karenge, wahi se direct edit ho jayega!</div>
         <div style="display:flex; gap:10px; align-items:center;">
-            <a href="https://wa.me/918651222111?text=Namaste!%20Tulsi%20Events%20me%20booking%20ki%20jaankari%20chahiye." target="_blank" style="background:#25D366; color:#fff; text-decoration:none; padding:8px 14px; border-radius:20px; font-weight:bold; font-size:0.85rem; display:flex; align-items:center; gap:5px;">💬 WhatsApp</a>
             <button class="close-live-btn" onclick="closeLiveVisualBuilder()">✖ Close Live Mode</button>
         </div>
     </div>
 
     <header style="padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-gold); background: #040914;">
-        <div class="editable-item" style="color:var(--gold-bright); font-weight:700; font-size:1.25rem;" id="liveLogoText" onclick="triggerQuickEdit('Site Name / Logo', 'tulsi_config/siteName', this.innerText)">✨ Tulsi Events</div>
-        <div class="editable-item" style="background:var(--gold); color:#030712; padding:6px 16px; border-radius:20px; font-weight:bold; font-size:0.85rem;" id="liveHeaderPhone" onclick="triggerQuickEdit('Header Phone', 'tulsi_config/phone', this.innerText.replace('📞 ', ''))">📞 8651222111</div>
+        <div class="editable-item" style="color:var(--gold-bright); font-weight:700; font-size:1.25rem;" id="liveLogoText" onclick="triggerQuickEdit('Site Name / Logo', 'tulsi_config/siteName', this.innerText.replace('✨ ', ''))">✨ Tulsi Events</div>
+        <div style="display:flex; gap:10px; align-items:center;">
+            <div class="editable-item" style="background:rgba(212,175,55,0.15); border:1px solid var(--border-gold); color:var(--gold-bright); padding:6px 14px; border-radius:20px; font-weight:600; font-size:0.8rem;" id="liveAboutBtn" onclick="triggerQuickEdit('About Us Title', 'tulsi_config/aboutTitle', 'About Tulsi Events')">ℹ️ About Us</div>
+            <div class="editable-item" style="background:var(--gold); color:#030712; padding:6px 16px; border-radius:20px; font-weight:bold; font-size:0.85rem;" id="liveHeaderPhone" onclick="triggerQuickEdit('Header Phone', 'tulsi_config/phone', this.innerText.replace('📞 ', ''))">📞 8651222111</div>
+        </div>
     </header>
 
-    <div style="text-align: center; padding: 50px 20px; background: radial-gradient(circle, #0f1c36 0%, #030712 100%);">
-        <div class="editable-item" style="display:inline-block; border:1px solid var(--gold); color:var(--gold-bright); padding:5px 18px; border-radius:30px; font-size:0.85rem; margin-bottom:15px;" id="liveHeroBadge" onclick="triggerQuickEdit('Hero Badge', 'tulsi_config/heroBadge', this.innerText)">Banquet Hall & Hotel</div>
-        <h1 class="editable-item" style="font-size:2.4rem; color:#fff;" id="liveHeroTitle" onclick="triggerQuickEdit('Hero Title', 'tulsi_config/heroTitle', this.innerHTML, true, 'heroTitle')">Tulsi Events & Hotels Pvt. Ltd</h1>
-        <p class="editable-item" style="color:var(--gold); font-style:italic; font-size:1.2rem;" id="liveTagline" onclick="triggerQuickEdit('Tagline', 'tulsi_config/tagline', this.innerHTML, true, 'tagline')">"घर जैसा व्यवहार पाएँ..."</p>
-    </div>
+    <div style="display: flex; flex-direction: column;" id="liveMainStream">
+        <!-- Hero Section -->
+        <div style="text-align: center; padding: 50px 20px; background: radial-gradient(circle, #0f1c36 0%, #030712 100%);">
+            <div class="editable-item" style="display:inline-block; border:1px solid var(--gold); color:var(--gold-bright); padding:5px 18px; border-radius:30px; font-size:0.85rem; margin-bottom:15px;" id="liveHeroBadge" onclick="triggerQuickEdit('Hero Badge', 'tulsi_config/heroBadge', this.innerText)">Banquet Hall & Hotel</div>
+            <h1 class="editable-item" style="font-size:2.4rem; color:#fff;" id="liveHeroTitle" onclick="triggerQuickEdit('Hero Title', 'tulsi_config/heroTitle', this.innerHTML, true, 'heroTitle')">Tulsi Events & Hotels Pvt. Ltd</h1>
+            <p class="editable-item" style="color:var(--gold); font-style:italic; font-size:1.2rem;" id="liveTagline" onclick="triggerQuickEdit('Tagline', 'tulsi_config/tagline', this.innerHTML, true, 'tagline')">"घर जैसा व्यवहार पाएँ..."</p>
+        </div>
 
-    <div style="padding: 40px 20px; text-align:center;">
-        <h2 style="color:var(--gold-bright); font-size:2rem; margin-bottom:8px;">Our Exclusive Venues</h2>
-        <p style="color:var(--text-muted); margin-bottom:30px;">(Neeche kisi bhi hall ke naam ya details par click karke direct edit karein)</p>
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:25px; max-width:1100px; margin:auto;" id="liveVenuesGrid"></div>
+        <!-- Venues Section -->
+        <div style="padding: 40px 20px; text-align:center;" id="liveVenuesSection">
+            <h2 style="color:var(--gold-bright); font-size:2rem; margin-bottom:8px;">Our Exclusive Venues</h2>
+            <p style="color:var(--text-muted); margin-bottom:30px;">(Neeche kisi bhi hall ke naam, location ya enquiry par click karke direct edit karein)</p>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:25px; max-width:1100px; margin:auto;" id="liveVenuesGrid"></div>
+        </div>
+
+        <!-- Investment Section (Live Editable) -->
+        <div style="padding: 30px 20px; max-width: 1000px; margin: 0 auto 40px; width: 100%;" id="liveInvestSection">
+            <div style="background: radial-gradient(circle at top right, rgba(22, 38, 70, 0.9), rgba(7, 14, 28, 0.95)); border: 1px solid var(--border-gold); border-radius: 20px; padding: 35px 25px; text-align: center;">
+                <span class="editable-item" id="liveInvestBadge" style="display:inline-block; background:rgba(212,175,55,0.15); border:1px solid var(--gold); color:var(--gold-bright); padding:4px 14px; border-radius:20px; font-size:0.75rem; font-weight:700; margin-bottom:10px;" onclick="triggerQuickEdit('Investment Badge', 'tulsi_config/investBadge', this.innerText)">Partnership & Growth</span>
+                <h2 class="editable-item" id="liveInvestTitle" style="color:#fff; font-size:1.8rem; margin-bottom:10px;" onclick="triggerQuickEdit('Investment Heading', 'tulsi_config/investTitle', this.innerText)">Contact for Investment & Partnership</h2>
+                <p class="editable-item" id="liveInvestDesc" style="color:var(--text-muted); font-size:0.95rem; max-width:700px; margin:0 auto 20px; line-height:1.6;" onclick="triggerQuickEdit('Investment Description', 'tulsi_config/investDesc', this.innerText)">Tulsi Events & Hotels Pvt. Ltd ke sath apne business ka vistar karein...</p>
+                <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+                    <span style="background:#25D366; color:#fff; padding:10px 20px; border-radius:10px; font-weight:bold; font-size:0.9rem;">💬 WhatsApp for Investment</span>
+                    <span style="border:1px solid var(--gold); color:var(--gold-bright); padding:10px 20px; border-radius:10px; font-weight:bold; font-size:0.9rem;">📞 Direct Call</span>
+                </div>
+            </div>
+        </div>
     </div>
 
     <footer style="padding: 40px 20px; text-align:center; border-top:1px solid var(--border-gold); background:#02050b;">
@@ -598,6 +664,17 @@
             document.getElementById('cfgYoutube').value = c.youtube || '';
             document.getElementById('cfgEmail').value = c.email || '';
 
+            // About Us Fields
+            document.getElementById('cfgAboutTitle').value = c.aboutTitle || '';
+            document.getElementById('cfgAboutText').value = c.aboutText || '';
+
+            // Investment & Partnership Fields
+            document.getElementById('cfgInvestOrder').value = (c.investOrder !== undefined) ? c.investOrder : "2";
+            document.getElementById('cfgInvestBadge').value = c.investBadge || '';
+            document.getElementById('cfgInvestTitle').value = c.investTitle || '';
+            document.getElementById('cfgInvestDesc').value = c.investDesc || '';
+            document.getElementById('cfgInvestPhone').value = c.investPhone || '';
+
             // Background Color Sync
             if(c.bgColor) {
                 document.getElementById('cfgBgColor').value = c.bgColor;
@@ -642,6 +719,16 @@
 
             document.getElementById('liveAddress').innerText = c.address ? `📍 ${c.address}` : "📍 Siwan, Bihar";
             document.getElementById('liveFooterPhone').innerText = c.phone ? `📞 ${c.phone}` : "📞 8651222111";
+
+            // Live Investment Sync & Flex Order
+            document.getElementById('liveInvestBadge').innerText = c.investBadge || "Partnership & Growth";
+            document.getElementById('liveInvestTitle').innerText = c.investTitle || "Contact for Investment & Partnership";
+            document.getElementById('liveInvestDesc').innerText = c.investDesc || "Tulsi Events & Hotels Pvt. Ltd ke sath apne business ka vistar karein...";
+
+            const liveInvestBox = document.getElementById('liveInvestSection');
+            if (c.investOrder !== undefined) {
+                liveInvestBox.style.order = c.investOrder;
+            }
         }
     });
 
@@ -655,6 +742,23 @@
             heroBadge: document.getElementById('cfgHeroBadge').value,
             heroTitle: document.getElementById('cfgHeroTitle').value
         }).then(() => alert("Website Settings Saved!"));
+    }
+
+    function saveAboutConfig() {
+        db.ref('tulsi_config').update({
+            aboutTitle: document.getElementById('cfgAboutTitle').value,
+            aboutText: document.getElementById('cfgAboutText').value
+        }).then(() => alert("✅ About Us Details Saved!"));
+    }
+
+    function saveInvestConfig() {
+        db.ref('tulsi_config').update({
+            investOrder: parseInt(document.getElementById('cfgInvestOrder').value),
+            investBadge: document.getElementById('cfgInvestBadge').value,
+            investTitle: document.getElementById('cfgInvestTitle').value,
+            investDesc: document.getElementById('cfgInvestDesc').value,
+            investPhone: document.getElementById('cfgInvestPhone').value
+        }).then(() => alert("✅ Investment & Partnership Settings Saved!"));
     }
 
     function saveBotPosConfig() {
@@ -692,7 +796,7 @@
             title: title,
             location: loc,
             imageUrl: img || "https://images.unsplash.com/photo-1519167758481-83f550bb49b3",
-            phone: phone,
+            phone: phone || "8651222111",
             btnText: btnText,
             btnColor: btnColor,
             description: desc
@@ -701,6 +805,7 @@
             document.getElementById('newVenTitle').value = '';
             document.getElementById('newVenLoc').value = '';
             document.getElementById('newVenImg').value = '';
+            document.getElementById('newVenPhone').value = '';
             document.getElementById('newVenFile').value = '';
             document.getElementById('newVenDesc').value = '';
             document.getElementById('newVenStatus').innerText = '';
@@ -766,6 +871,10 @@
                         <input type="text" id="loc_${key}" value="${v.location || ''}">
                     </div>
                     <div class="form-group">
+                        <label>Booking Enquiry Phone/WhatsApp</label>
+                        <input type="text" id="phone_${key}" value="${v.phone || '8651222111'}">
+                    </div>
+                    <div class="form-group">
                         <label>Button Text</label>
                         <input type="text" id="btnT_${key}" value="${v.btnText || 'Explore Details & Gallery'}">
                     </div>
@@ -803,18 +912,24 @@
             `;
             vContainer.appendChild(div);
 
-            // Live Grid View
+            // Live Grid View with Booking Enquiry Button
             const lCard = document.createElement('div');
-            lCard.style.cssText = "background:#0f1c34; border:1px solid var(--border-gold); border-radius:18px; overflow:hidden; text-align:left; box-shadow:0 10px 30px rgba(0,0,0,0.6);";
+            lCard.style.cssText = "background:#0f1c34; border:1px solid var(--border-gold); border-radius:18px; overflow:hidden; text-align:left; box-shadow:0 10px 30px rgba(0,0,0,0.6); display:flex; flex-direction:column;";
             const bImg = v.imageUrl || "https://images.unsplash.com/photo-1519167758481-83f550bb49b3";
             lCard.innerHTML = `
                 <img src="${bImg}" style="width:100%; height:200px; object-fit:cover;">
-                <div style="padding:18px;">
+                <div style="padding:18px; flex:1; display:flex; flex-direction:column;">
                     <h3 class="editable-item" style="color:#fff; font-size:1.3rem; margin-bottom:6px;" onclick="triggerQuickEdit('Venue Name', 'tulsi_venues/${key}/title', '${v.title}')">${v.title}</h3>
                     <p class="editable-item" style="color:var(--text-muted); font-size:0.9rem; margin-bottom:14px;" onclick="triggerQuickEdit('Venue Location', 'tulsi_venues/${key}/location', '${v.location || 'Siwan, Bihar'}')">📍 ${v.location || 'Siwan, Bihar'}</p>
-                    <div class="editable-item" style="background:${v.btnColor || '#d4af37'}; color:#030712; padding:10px 14px; border-radius:10px; font-weight:bold; font-size:0.85rem; display:flex; justify-content:space-between;" onclick="triggerQuickEdit('Button Name', 'tulsi_venues/${key}/btnText', '${v.btnText || 'Explore Details & Gallery'}')">
-                        <div>${v.btnText || 'Explore Details & Gallery'}</div>
-                        <div>➔</div>
+                    
+                    <div style="margin-top:auto; display:flex; flex-direction:column; gap:8px;">
+                        <div class="editable-item" style="background:${v.btnColor || '#d4af37'}; color:#030712; padding:10px 14px; border-radius:10px; font-weight:bold; font-size:0.85rem; display:flex; justify-content:space-between;" onclick="triggerQuickEdit('Button Name', 'tulsi_venues/${key}/btnText', '${v.btnText || 'Explore Details & Gallery'}')">
+                            <div>${v.btnText || 'Explore Details & Gallery'}</div>
+                            <div>➔</div>
+                        </div>
+                        <div class="editable-item" style="background:#25D366; color:#fff; padding:10px 14px; border-radius:10px; font-weight:bold; font-size:0.85rem; text-align:center;" onclick="triggerQuickEdit('Enquiry Phone', 'tulsi_venues/${key}/phone', '${v.phone || '8651222111'}')">
+                            💬 Booking Enquiry (${v.phone || '8651222111'})
+                        </div>
                     </div>
                 </div>
             `;
@@ -827,6 +942,7 @@
         db.ref('tulsi_venues/' + key).update({
             title: document.getElementById('title_' + key).value,
             location: document.getElementById('loc_' + key).value,
+            phone: document.getElementById('phone_' + key).value,
             imageUrl: document.getElementById('img_' + key).value,
             btnText: document.getElementById('btnT_' + key).value,
             btnColor: document.getElementById('btnC_' + key).value,
